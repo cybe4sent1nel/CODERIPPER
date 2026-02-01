@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "buildCommand": "cd web && npm install --include=dev && npm run build",
-  "installCommand": "cd web && npm install --include=dev",
-  "outputDirectory": "web/.next",
-  "framework": null,
-  "regions": ["iad1"]
-}
