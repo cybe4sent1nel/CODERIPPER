@@ -39,9 +39,9 @@ function ThemeTransition() {
           setTheme(newTheme)
         })
       } else {
-        // Fallback: Create a spreading circle animation
-        const overlay = document.createElement('div')
-        overlay.style.cssText = `
+        // Fallback: Create rapid emerge/converge animation with rays
+        const container = document.createElement('div')
+        container.style.cssText = `
           position: fixed;
           top: 0;
           left: 0;
@@ -49,26 +49,73 @@ function ThemeTransition() {
           height: 100vh;
           pointer-events: none;
           z-index: 99999;
-          background: ${newTheme === 'dark' ? '#0a0a1a' : '#ffffff'};
-          clip-path: circle(0px at ${x}px ${y}px);
-          transition: clip-path 0.5s ease-out;
+          overflow: hidden;
         `
-        document.body.appendChild(overlay)
-
-        // Trigger the animation
+        
+        // Create radiating rays effect
+        const rayCount = 12
+        const rayColor = newTheme === 'dark' ? '#6366f1' : '#fbbf24'
+        
+        for (let i = 0; i < rayCount; i++) {
+          const ray = document.createElement('div')
+          const angle = (i / rayCount) * 360
+          ray.style.cssText = `
+            position: absolute;
+            left: ${x}px;
+            top: ${y}px;
+            width: 4px;
+            height: 0;
+            background: linear-gradient(to bottom, ${rayColor}, transparent);
+            transform-origin: top center;
+            transform: rotate(${angle}deg);
+            opacity: 1;
+            transition: height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease;
+          `
+          container.appendChild(ray)
+        }
+        
+        // Flash overlay
+        const flash = document.createElement('div')
+        flash.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: ${newTheme === 'dark' ? 'rgba(99, 102, 241, 0.3)' : 'rgba(251, 191, 36, 0.3)'};
+          opacity: 0;
+          transition: opacity 0.15s ease-out;
+        `
+        container.appendChild(flash)
+        
+        document.body.appendChild(container)
+        
+        // Animate rays shooting out
         requestAnimationFrame(() => {
-          overlay.style.clipPath = `circle(${maxRadius}px at ${x}px ${y}px)`
+          const rays = container.querySelectorAll('div:not(:last-child)')
+          rays.forEach((ray: Element) => {
+            ;(ray as HTMLElement).style.height = `${maxRadius}px`
+          })
+          flash.style.opacity = '1'
         })
-
-        // Change theme midway through animation
+        
+        // Flash and change theme
         setTimeout(() => {
+          flash.style.opacity = '0'
           setTheme(newTheme)
-        }, 250)
-
-        // Remove overlay after animation
+          
+          // Converge rays back
+          const rays = container.querySelectorAll('div:not(:last-child)')
+          rays.forEach((ray: Element) => {
+            ;(ray as HTMLElement).style.height = '0'
+            ;(ray as HTMLElement).style.opacity = '0'
+          })
+        }, 150)
+        
+        // Remove container
         setTimeout(() => {
-          overlay.remove()
-        }, 500)
+          container.remove()
+        }, 350)
       }
     }
 
