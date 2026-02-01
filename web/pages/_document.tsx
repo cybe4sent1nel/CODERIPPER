@@ -1,8 +1,6 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {
-  const adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
-  
   return (
     <Html lang="en">
       <Head>
@@ -36,14 +34,12 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
-        {/* Google AdSense */}
-        {adsenseClientId && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
-            crossOrigin="anonymous"
-          />
-        )}
+        {/* Google AdSense - Required for site verification */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2332002596329232"
+          crossOrigin="anonymous"
+        />
       </Head>
       <body>
         <Main />
