@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "coderipper.fullname" . }}-badges
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: badges
+  template:
+    metadata:
+      labels:
+        app: badges
+    spec:
+      containers:
+        - name: badges
+          image: {{ .Values.badges.image | default "coderipper/badges:latest" }}
+          ports:
+            - containerPort: 8001
+          env:
+            - name: DATABASE_URL
+              value: {{ .Values.databaseUrl | default "postgresql://coderip:coderip@postgres:5432/coderipper" }}
+            - name: REDIS_URL
+              value: {{ .Values.redisUrl | default "redis://redis:6379" }}
+            - name: BADGE_SERVICE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: coderipper-secrets
+                  key: BADGE_SERVICE_TOKEN

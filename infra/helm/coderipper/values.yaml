@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: coderipper/app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+execEngine:
+  image: coderipper/exec-engine:latest
+  runtimeClassName: ""
+s3:
+  endpoint: ""
+  bucket: "coderipper-submissions"
+  useSSL: true
+aiService:
+  image: coderipper/ai-service:latest
+auth:
+  image: coderipper/auth-service:latest
+badges:
+  image: coderipper/badges:latest
+realtime:
+  image: coderipper/realtime:latest
+web:
+  image: coderipper/web:latest
+secrets:
+  authSecret: changeme
+  badgeToken: devtoken
+  s3AccessKey: ""
+  s3SecretKey: ""

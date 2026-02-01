@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "coderipper.fullname" . }}-realtime
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: realtime
+  template:
+    metadata:
+      labels:
+        app: realtime
+    spec:
+      containers:
+        - name: realtime
+          image: {{ .Values.realtime.image | default "coderipper/realtime:latest" }}
+          ports:
+            - containerPort: 1234
+          env:
+            - name: REDIS_URL
+              value: {{ .Values.redisUrl | default "redis://redis:6379" }}

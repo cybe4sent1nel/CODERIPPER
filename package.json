@@ -1,0 +1,29 @@
+{
+  "name": "coderipper",
+  "version": "1.0.0",
+  "description": "CodeRipper - Enterprise AI-Powered Code Editor & Compiler",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n \"web,exec\" -c \"cyan,green\" \"npm run dev:web\" \"npm run dev:exec || echo Exec-engine not available\"",
+    "dev:web": "cd web && npm run dev",
+    "dev:exec": "cd services/exec-engine && go mod download && go run .",
+    "dev:web-only": "cd web && npm run dev",
+    "build": "cd web && npm run build",
+    "build:exec": "cd services/exec-engine && go mod download && go build -o exec-engine.exe .",
+    "start": "cd web && npm run start",
+    "install:all": "cd web && npm install",
+    "docker:up": "docker compose -f infra/docker-compose.yml up --build",
+    "docker:down": "docker compose -f infra/docker-compose.yml down",
+    "setup": "node scripts/setup.js",
+    "lint": "cd web && npm run lint",
+    "test": "echo \"No tests configured yet\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "CodeRipper Team",
+  "license": "MIT"
+}

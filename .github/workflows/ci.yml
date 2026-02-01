@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install web deps
+        working-directory: ./web
+        run: |
+          npm ci
+      - name: Lint / Build Web
+        working-directory: ./web
+        run: |
+          npm run build
+      - name: Build exec-engine
+        working-directory: ./services/exec-engine
+        run: |
+          go version
+          go env
+          go test ./...
+          docker build -t coderipper/exec-engine:ci .
+      - name: Build ai-service
+        working-directory: ./services/ai-service
+        run: |
+          docker build -t coderipper/ai-service:ci .
+      - name: Build auth service
+        working-directory: ./services/auth
+        run: |
+          docker build -t coderipper/auth-service:ci .
+      - name: Build runners (python)
+        working-directory: ./runners/python-runner
+        run: |
+          docker build -t coderipper/runner-python:ci .
+      - name: Scan images with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: |
+            coderipper/exec-engine:ci
+            coderipper/ai-service:ci
+            coderipper/auth-service:ci
+            coderipper/runner-python:ci
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.REGISTRY_HOST }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+      - name: Build and push images
+        run: |
+          docker build -t ${{ secrets.REGISTRY_HOST }}/coderipper/exec-engine:latest ./services/exec-engine
+          docker push ${{ secrets.REGISTRY_HOST }}/coderipper/exec-engine:latest
+          docker build -t ${{ secrets.REGISTRY_HOST }}/coderipper/ai-service:latest ./services/ai-service
+          docker push ${{ secrets.REGISTRY_HOST }}/coderipper/ai-service:latest
+          docker build -t ${{ secrets.REGISTRY_HOST }}/coderipper/auth-service:latest ./services/auth
+          docker push ${{ secrets.REGISTRY_HOST }}/coderipper/auth-service:latest
+          docker build -t ${{ secrets.REGISTRY_HOST }}/coderipper/runner-python:latest ./runners/python-runner
+          docker push ${{ secrets.REGISTRY_HOST }}/coderipper/runner-python:latest
+      - name: Sign images with cosign
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          cosign sign --key ${{ secrets.COSIGN_KEY }} ${{ secrets.REGISTRY_HOST }}/coderipper/exec-engine:latest || true
+          cosign sign --key ${{ secrets.COSIGN_KEY }} ${{ secrets.REGISTRY_HOST }}/coderipper/ai-service:latest || true
+          cosign sign --key ${{ secrets.COSIGN_KEY }} ${{ secrets.REGISTRY_HOST }}/coderipper/auth-service:latest || true
+
+      - name: Setup helm
+        uses: azure/setup-helm@v3
+      - name: Deploy to Kubernetes
+        env:
+          KUBECONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          helm upgrade --install coderipper infra/helm/coderipper --set execEngine.image=${{ secrets.REGISTRY_HOST }}/coderipper/exec-engine:latest --set aiService.image=${{ secrets.REGISTRY_HOST }}/coderipper/ai-service:latest --set execEngine.serviceAccountName=coderipper-runner-sa
+
+  e2e:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Wait for services
+        run: |
+          sleep 20
+      - name: Run E2E tests
+        run: |
+          python tests/e2e/run_e2e.py
+

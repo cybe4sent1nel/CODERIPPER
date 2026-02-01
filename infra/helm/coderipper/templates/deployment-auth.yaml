@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "coderipper.fullname" . }}-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: {{ .Values.auth.image | default "coderipper/auth-service:latest" }}
+          ports:
+            - containerPort: 8082
+          env:
+            - name: DATABASE_URL
+              value: {{ .Values.databaseUrl | default "postgresql://coderip:coderip@postgres:5432/coderipper" }}
+            - name: AUTH_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: coderipper-secrets
+                  key: AUTH_JWT_SECRET
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

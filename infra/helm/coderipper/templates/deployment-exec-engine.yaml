@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "coderipper.fullname" . }}-exec-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exec-engine
+  template:
+    metadata:
+      labels:
+        app: exec-engine
+    spec:
+      containers:
+        - name: exec-engine
+          image: {{ .Values.execEngine.image }}
+          ports:
+            - containerPort: 8081
+          env:
+            - name: RUNNER_MODE
+              value: "k8s"
+            - name: K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: RUNTIME_CLASS_NAME
+              value: {{ .Values.execEngine.runtimeClassName | default "" | quote }}
+            - name: S3_ENDPOINT
+              value: {{ .Values.s3.endpoint | default "" | quote }}
+            - name: S3_BUCKET
+              value: {{ .Values.s3.bucket | default "coderipper-submissions" | quote }}
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: coderipper-secrets
+                  key: S3_ACCESS_KEY
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: coderipper-secrets
+                  key: S3_SECRET_KEY
+            - name: S3_USE_SSL
+              value: {{ .Values.s3.useSSL | default true | quote }}
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: false
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          volumeMounts:
+            - name: runner-tmp
+              mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: runner-tmp
+          emptyDir: {}
+      serviceAccountName: coderipper-runner-sa

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "coderipper.fullname" . }}-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coderipper-webhook
+  template:
+    metadata:
+      labels:
+        app: coderipper-webhook
+    spec:
+      containers:
+        - name: webhook
+          image: {{ .Values.webhook.image | default "coderipper/webhook:latest" }}
+          env:
+            - name: REQUIRED_RUNTIME_CLASS
+              value: {{ .Values.execEngine.runtimeClassName | quote }}
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+              readOnly: true
+      volumes:
+        - name: tls
+          secret:
+            secretName: coderipper-webhook-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "coderipper.fullname" . }}-webhook
+spec:
+  ports:
+    - port: 443
+      targetPort: 9443
+      protocol: TCP
+      name: https
+  selector:
+    app: coderipper-webhook
+  type: ClusterIP
+
+# Note: A ValidatingWebhookConfiguration must be created with a CABundle matching the webhook TLS cert CA. Use cert-manager to automate cert provisioning and webhook configuration.

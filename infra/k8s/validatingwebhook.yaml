@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: coderipper-runner-webhook
+webhooks:
+  - name: runner-validator.coderipper.io
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: coderipper-webhook
+        namespace: coderipper
+        path: "/validate"
+      # CABundle must be set to the PEM-encoded CA that signed the webhook server cert.
+      # Use cert-manager to automatically populate CABundle, or manually set it before creating this resource.
+      caBundle: ""
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    timeoutSeconds: 5
+    failurePolicy: Fail

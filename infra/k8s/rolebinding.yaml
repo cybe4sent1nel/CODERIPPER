@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: coderipper-runner-rb
+  namespace: coderipper
+subjects:
+  - kind: ServiceAccount
+    name: coderipper-runner-sa
+    namespace: coderipper
+roleRef:
+  kind: Role
+  name: coderipper-runner-role
+  apiGroup: rbac.authorization.k8s.io

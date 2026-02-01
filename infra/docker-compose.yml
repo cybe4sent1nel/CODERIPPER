@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: coderipper
+      POSTGRES_USER: coderip
+      POSTGRES_PASSWORD: coderip
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  mongo:
+    image: mongo:6
+    ports:
+      - '27017:27017'
+  redis:
+    image: redis:7
+    ports:
+      - '6379:6379'
+  exec-engine:
+    build: ../services/exec-engine
+    ports:
+      - '8081:8081'
+    environment:
+      - AUTH_JWT_SECRET=changeme
+      - BADGE_SERVICE_TOKEN=devtoken
+    depends_on: [postgres, mongo, runner-python]
+  ai-service:
+    build: ../services/ai-service
+    ports:
+      - '8000:8000'
+    environment:
+      - AUTH_JWT_SECRET=changeme
+  badges:
+    build: ../services/badge-service
+    ports:
+      - '8001:8001'
+    environment:
+      - BADGE_SERVICE_TOKEN=devtoken
+    depends_on: [postgres, redis]
+  realtime:
+    build: ../services/realtime
+    ports:
+      - '1234:1234'
+    depends_on: [redis]
+  auth:
+    build: ../services/auth
+    ports:
+      - '8082:8082'
+    environment:
+      - AUTH_JWT_SECRET=changeme
+  runner-python:
+    build: ../runners/python-runner
+    image: coderipper/runner-python:latest
+
+volumes:
+  db-data:

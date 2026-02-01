@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coderipper-webhook
+  namespace: coderipper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coderipper-webhook
+  template:
+    metadata:
+      labels:
+        app: coderipper-webhook
+    spec:
+      containers:
+        - name: webhook
+          image: coderipper/webhook:latest
+          env:
+            - name: REQUIRED_RUNTIME_CLASS
+              value: "gvisor"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: tls
+              mountPath: /tls
+              readOnly: true
+      volumes:
+        - name: tls
+          secret:
+            secretName: coderipper-webhook-tls
