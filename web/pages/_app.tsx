@@ -34,8 +34,8 @@ function ThemeTransition() {
       )
 
       // Check if View Transitions API is supported
-      if (document.startViewTransition) {
-        document.startViewTransition(() => {
+      if ((document as any).startViewTransition) {
+        (document as any).startViewTransition(() => {
           setTheme(newTheme)
         })
       } else {
