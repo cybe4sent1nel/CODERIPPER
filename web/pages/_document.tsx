@@ -39,7 +39,8 @@ export default function Document() {
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2332002596329232"
           crossOrigin="anonymous"
-        />
+          data-ad-client="ca-pub-2332002596329232"
+        ></script>
       </Head>
       <body>
         <Main />
