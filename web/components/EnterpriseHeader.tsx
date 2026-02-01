@@ -167,7 +167,14 @@ export default function EnterpriseHeader({
               {/* Theme Toggle */}
               {mounted && (
                 <button
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  onClick={(e) => {
+                    // Use the animated theme toggle if available
+                    if (typeof window !== 'undefined' && (window as any).__animatedThemeToggle) {
+                      (window as any).__animatedThemeToggle(e.nativeEvent)
+                    } else {
+                      setTheme(theme === 'dark' ? 'light' : 'dark')
+                    }
+                  }}
                   className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                   title="Toggle theme"
                 >
