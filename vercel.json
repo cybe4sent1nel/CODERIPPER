@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "buildCommand": "cd web && npm install && npm run build",
+  "installCommand": "cd web && npm install",
+  "outputDirectory": "web/.next",
+  "framework": null,
+  "regions": ["iad1"],
+  "functions": {
+    "web/pages/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  }
+}
