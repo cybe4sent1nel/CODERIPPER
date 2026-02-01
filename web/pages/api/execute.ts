@@ -27,27 +27,31 @@ const LANGUAGE_CONFIGS: Record<string, {
   command: (filename: string) => string[]
   pistonLang?: string // Piston API language name
   pistonVersion?: string // Piston API version
+  mainFileName?: string // Specific main file name if required
 }> = {
   python: {
     dockerImage: 'python:3.11-slim',
     fileExtension: 'py',
     command: (f) => ['python', f],
     pistonLang: 'python',
-    pistonVersion: '3.10.0'
+    pistonVersion: '3.10.0',
+    mainFileName: 'main.py'
   },
   javascript: {
     dockerImage: 'node:20-slim',
     fileExtension: 'js',
     command: (f) => ['node', f],
     pistonLang: 'javascript',
-    pistonVersion: '18.15.0'
+    pistonVersion: '18.15.0',
+    mainFileName: 'main.js'
   },
   typescript: {
     dockerImage: 'node:20-slim',
     fileExtension: 'ts',
     command: (f) => ['npx', 'tsx', f],
     pistonLang: 'typescript',
-    pistonVersion: '5.0.3'
+    pistonVersion: '5.0.3',
+    mainFileName: 'main.ts'
   },
   java: {
     dockerImage: 'openjdk:17-slim',
@@ -55,104 +59,296 @@ const LANGUAGE_CONFIGS: Record<string, {
     command: () => ['bash', '-c', 'javac Main.java && java Main'],
     pistonLang: 'java',
     pistonVersion: '15.0.2'
+    // Java filename is dynamically set based on class name
   },
   cpp: {
     dockerImage: 'gcc:12',
     fileExtension: 'cpp',
     command: (f) => ['bash', '-c', `g++ -o program ${f} && ./program`],
     pistonLang: 'c++',
-    pistonVersion: '10.2.0'
+    pistonVersion: '10.2.0',
+    mainFileName: 'main.cpp'
   },
   c: {
     dockerImage: 'gcc:12',
     fileExtension: 'c',
     command: (f) => ['bash', '-c', `gcc -o program ${f} && ./program`],
     pistonLang: 'c',
-    pistonVersion: '10.2.0'
+    pistonVersion: '10.2.0',
+    mainFileName: 'main.c'
   },
   go: {
     dockerImage: 'golang:1.21-alpine',
     fileExtension: 'go',
     command: (f) => ['go', 'run', f],
     pistonLang: 'go',
-    pistonVersion: '1.16.2'
+    pistonVersion: '1.16.2',
+    mainFileName: 'main.go'
   },
   rust: {
     dockerImage: 'rust:1.74-slim',
     fileExtension: 'rs',
     command: (f) => ['bash', '-c', `rustc ${f} -o program && ./program`],
     pistonLang: 'rust',
-    pistonVersion: '1.68.2'
+    pistonVersion: '1.68.2',
+    mainFileName: 'main.rs'
   },
   ruby: {
     dockerImage: 'ruby:3.2-slim',
     fileExtension: 'rb',
     command: (f) => ['ruby', f],
     pistonLang: 'ruby',
-    pistonVersion: '3.0.1'
+    pistonVersion: '3.0.1',
+    mainFileName: 'main.rb'
   },
   php: {
     dockerImage: 'php:8.2-cli',
     fileExtension: 'php',
     command: (f) => ['php', f],
     pistonLang: 'php',
-    pistonVersion: '8.2.3'
+    pistonVersion: '8.2.3',
+    mainFileName: 'main.php'
   },
   csharp: {
     dockerImage: 'mcr.microsoft.com/dotnet/sdk:8.0',
     fileExtension: 'cs',
     command: () => ['dotnet', 'script', 'Program.cs'],
     pistonLang: 'csharp',
-    pistonVersion: '6.12.0'
+    pistonVersion: '6.12.0',
+    mainFileName: 'main.cs'
   },
   kotlin: {
     dockerImage: 'zenika/kotlin:1.9',
     fileExtension: 'kt',
     command: (f) => ['kotlinc', '-script', f],
     pistonLang: 'kotlin',
-    pistonVersion: '1.8.20'
+    pistonVersion: '1.8.20',
+    mainFileName: 'main.kt'
   },
   swift: {
     dockerImage: 'swift:5.9',
     fileExtension: 'swift',
     command: (f) => ['swift', f],
     pistonLang: 'swift',
-    pistonVersion: '5.3.3'
+    pistonVersion: '5.3.3',
+    mainFileName: 'main.swift'
   },
   r: {
     dockerImage: 'r-base:4.3.2',
     fileExtension: 'r',
     command: (f) => ['Rscript', f],
-    pistonLang: 'r',
-    pistonVersion: '4.1.1'
+    pistonLang: 'rscript',
+    pistonVersion: '4.1.1',
+    mainFileName: 'main.r'
   },
   perl: {
     dockerImage: 'perl:5.38',
     fileExtension: 'pl',
     command: (f) => ['perl', f],
     pistonLang: 'perl',
-    pistonVersion: '5.36.0'
+    pistonVersion: '5.36.0',
+    mainFileName: 'main.pl'
   },
   scala: {
     dockerImage: 'sbtscala/scala-sbt:17.0.8_1.9.7_3.3.1',
     fileExtension: 'scala',
     command: (f) => ['scala', f],
     pistonLang: 'scala',
-    pistonVersion: '3.2.2'
+    pistonVersion: '3.2.2',
+    mainFileName: 'main.scala'
   },
   bash: {
     dockerImage: 'bash:5.2',
     fileExtension: 'sh',
     command: (f) => ['bash', f],
     pistonLang: 'bash',
-    pistonVersion: '5.2.0'
+    pistonVersion: '5.2.0',
+    mainFileName: 'main.sh'
   },
   lua: {
     dockerImage: 'lua:5.4',
     fileExtension: 'lua',
     command: (f) => ['lua', f],
     pistonLang: 'lua',
-    pistonVersion: '5.4.4'
+    pistonVersion: '5.4.4',
+    mainFileName: 'main.lua'
+  },
+  // Additional languages
+  haskell: {
+    dockerImage: 'haskell:9.0',
+    fileExtension: 'hs',
+    command: (f) => ['runhaskell', f],
+    pistonLang: 'haskell',
+    pistonVersion: '9.0.1',
+    mainFileName: 'main.hs'
+  },
+  elixir: {
+    dockerImage: 'elixir:1.14',
+    fileExtension: 'exs',
+    command: (f) => ['elixir', f],
+    pistonLang: 'elixir',
+    pistonVersion: '1.11.3',
+    mainFileName: 'main.exs'
+  },
+  clojure: {
+    dockerImage: 'clojure:latest',
+    fileExtension: 'clj',
+    command: (f) => ['clojure', f],
+    pistonLang: 'clojure',
+    pistonVersion: '1.10.3',
+    mainFileName: 'main.clj'
+  },
+  dart: {
+    dockerImage: 'dart:2.19',
+    fileExtension: 'dart',
+    command: (f) => ['dart', f],
+    pistonLang: 'dart',
+    pistonVersion: '2.19.6',
+    mainFileName: 'main.dart'
+  },
+  nim: {
+    dockerImage: 'nim:1.6',
+    fileExtension: 'nim',
+    command: (f) => ['nim', 'r', f],
+    pistonLang: 'nim',
+    pistonVersion: '1.6.2',
+    mainFileName: 'main.nim'
+  },
+  julia: {
+    dockerImage: 'julia:1.8',
+    fileExtension: 'jl',
+    command: (f) => ['julia', f],
+    pistonLang: 'julia',
+    pistonVersion: '1.8.5',
+    mainFileName: 'main.jl'
+  },
+  fortran: {
+    dockerImage: 'gcc:12',
+    fileExtension: 'f90',
+    command: (f) => ['bash', '-c', `gfortran ${f} -o program && ./program`],
+    pistonLang: 'fortran',
+    pistonVersion: '10.2.0',
+    mainFileName: 'main.f90'
+  },
+  cobol: {
+    dockerImage: 'gnucobol:latest',
+    fileExtension: 'cob',
+    command: (f) => ['cobc', '-xj', f],
+    pistonLang: 'cobol',
+    pistonVersion: '3.1.2',
+    mainFileName: 'main.cob'
+  },
+  d: {
+    dockerImage: 'dlang:latest',
+    fileExtension: 'd',
+    command: (f) => ['rdmd', f],
+    pistonLang: 'd',
+    pistonVersion: '10.2.0',
+    mainFileName: 'main.d'
+  },
+  ocaml: {
+    dockerImage: 'ocaml:4.12',
+    fileExtension: 'ml',
+    command: (f) => ['ocaml', f],
+    pistonLang: 'ocaml',
+    pistonVersion: '4.12.0',
+    mainFileName: 'main.ml'
+  },
+  prolog: {
+    dockerImage: 'swipl:latest',
+    fileExtension: 'pl',
+    command: (f) => ['swipl', '-q', '-t', 'main', '-s', f],
+    pistonLang: 'prolog',
+    pistonVersion: '8.2.4',
+    mainFileName: 'main.pro'
+  },
+  racket: {
+    dockerImage: 'racket:8.3',
+    fileExtension: 'rkt',
+    command: (f) => ['racket', f],
+    pistonLang: 'racket',
+    pistonVersion: '8.3.0',
+    mainFileName: 'main.rkt'
+  },
+  zig: {
+    dockerImage: 'zig:latest',
+    fileExtension: 'zig',
+    command: (f) => ['zig', 'run', f],
+    pistonLang: 'zig',
+    pistonVersion: '0.10.1',
+    mainFileName: 'main.zig'
+  },
+  crystal: {
+    dockerImage: 'crystal:latest',
+    fileExtension: 'cr',
+    command: (f) => ['crystal', 'run', f],
+    pistonLang: 'crystal',
+    pistonVersion: '0.36.1',
+    mainFileName: 'main.cr'
+  },
+  groovy: {
+    dockerImage: 'groovy:latest',
+    fileExtension: 'groovy',
+    command: (f) => ['groovy', f],
+    pistonLang: 'groovy',
+    pistonVersion: '3.0.7',
+    mainFileName: 'main.groovy'
+  },
+  erlang: {
+    dockerImage: 'erlang:latest',
+    fileExtension: 'erl',
+    command: (f) => ['escript', f],
+    pistonLang: 'erlang',
+    pistonVersion: '23.0.0',
+    mainFileName: 'main.erl'
+  },
+  pascal: {
+    dockerImage: 'fpc:latest',
+    fileExtension: 'pas',
+    command: (f) => ['fpc', f],
+    pistonLang: 'pascal',
+    pistonVersion: '3.2.2',
+    mainFileName: 'main.pas'
+  },
+  powershell: {
+    dockerImage: 'mcr.microsoft.com/powershell:latest',
+    fileExtension: 'ps1',
+    command: (f) => ['pwsh', '-File', f],
+    pistonLang: 'powershell',
+    pistonVersion: '7.1.4',
+    mainFileName: 'main.ps1'
+  },
+  sql: {
+    dockerImage: 'sqlite:latest',
+    fileExtension: 'sql',
+    command: (f) => ['sqlite3', ':memory:', '-init', f],
+    pistonLang: 'sqlite3',
+    pistonVersion: '3.36.0',
+    mainFileName: 'main.sql'
+  },
+  lisp: {
+    dockerImage: 'clisp:latest',
+    fileExtension: 'lisp',
+    command: (f) => ['clisp', f],
+    pistonLang: 'lisp',
+    pistonVersion: '2.1.2',
+    mainFileName: 'main.lisp'
+  },
+  coffeescript: {
+    dockerImage: 'node:latest',
+    fileExtension: 'coffee',
+    command: (f) => ['coffee', f],
+    pistonLang: 'coffeescript',
+    pistonVersion: '2.5.1',
+    mainFileName: 'main.coffee'
+  },
+  asm: {
+    dockerImage: 'nasm:latest',
+    fileExtension: 'asm',
+    command: (f) => ['nasm', '-f', 'elf64', f],
+    pistonLang: 'nasm64',
+    pistonVersion: '2.15.5',
+    mainFileName: 'main.asm'
   }
 }
 
@@ -167,39 +363,66 @@ const ERROR_PATTERNS: { pattern: RegExp; type: string; message: string; suggesti
   { pattern: /IndexError: list index out of range/i, type: 'IndexError', message: 'List index out of range', suggestion: 'Check that the index is within the list bounds using len()' },
   { pattern: /KeyError/i, type: 'KeyError', message: 'Dictionary key not found', suggestion: 'Use .get() method or check if key exists with "in" keyword' },
   { pattern: /ModuleNotFoundError: No module named/i, type: 'ImportError', message: 'Module not found', suggestion: 'The module may not be installed. Try installing it with pip or use a standard library alternative' },
+  { pattern: /FileNotFoundError/i, type: 'FileError', message: 'File not found', suggestion: 'Check that the file path is correct and the file exists' },
+  { pattern: /AttributeError/i, type: 'AttributeError', message: 'Object has no such attribute', suggestion: 'Check that the object type has the attribute/method you are trying to access' },
+  { pattern: /ValueError/i, type: 'ValueError', message: 'Invalid value', suggestion: 'Check that you are passing valid values to the function' },
   
-  // JavaScript errors
+  // JavaScript/TypeScript errors
   { pattern: /ReferenceError: (\w+) is not defined/i, type: 'ReferenceError', message: 'Variable not defined', suggestion: 'Declare the variable with let, const, or var before using it' },
   { pattern: /SyntaxError: Unexpected token/i, type: 'SyntaxError', message: 'Unexpected token in your code', suggestion: 'Check for missing brackets, parentheses, commas, or semicolons' },
+  { pattern: /SyntaxError: Unexpected end of input/i, type: 'SyntaxError', message: 'Code is incomplete', suggestion: 'Check for missing closing brackets, parentheses, or braces' },
   { pattern: /TypeError: Cannot read propert/i, type: 'TypeError', message: 'Trying to access property of undefined/null', suggestion: 'Add null checks: if (obj && obj.property) or use optional chaining: obj?.property' },
   { pattern: /TypeError: (\w+) is not a function/i, type: 'TypeError', message: 'Trying to call something that is not a function', suggestion: 'Check that the variable is actually a function before calling it' },
+  { pattern: /RangeError/i, type: 'RangeError', message: 'Value out of range', suggestion: 'Check array indices, recursion depth, or numeric values' },
   
   // Java errors
   { pattern: /error: ';' expected/i, type: 'SyntaxError', message: 'Missing semicolon', suggestion: 'Add a semicolon (;) at the end of the statement' },
-  { pattern: /error: class (\w+) is public, should be declared in a file named/i, type: 'FileError', message: 'Class name must match filename', suggestion: 'Rename the class to "Main" or ensure the filename matches the public class name' },
+  { pattern: /error: class (\w+) is public, should be declared in a file named/i, type: 'FileError', message: 'Class name mismatch', suggestion: 'The public class name must be "Main" for this editor. Rename your class to "public class Main"' },
   { pattern: /error: cannot find symbol/i, type: 'SymbolError', message: 'Cannot find variable, method, or class', suggestion: 'Check for typos, make sure imports are correct, and variables are declared' },
   { pattern: /error: incompatible types/i, type: 'TypeError', message: 'Type mismatch', suggestion: 'Check that you are using the correct data types and add explicit casts if needed' },
   { pattern: /NullPointerException/i, type: 'NullPointerException', message: 'Null pointer exception', suggestion: 'Add null checks before accessing object properties or methods' },
+  { pattern: /ArrayIndexOutOfBoundsException/i, type: 'IndexError', message: 'Array index out of bounds', suggestion: 'Check that your array index is within valid range (0 to length-1)' },
+  { pattern: /NumberFormatException/i, type: 'FormatError', message: 'Invalid number format', suggestion: 'Make sure the string you are trying to parse is a valid number' },
+  { pattern: /error: unreported exception/i, type: 'ExceptionError', message: 'Uncaught exception', suggestion: 'Add try-catch block or declare the exception with "throws" clause' },
+  { pattern: /error: ['"\[\(\)\]'] expected/i, type: 'SyntaxError', message: 'Missing bracket or parenthesis', suggestion: 'Check that all opening brackets/parentheses have matching closing ones' },
+  { pattern: /error: ['"\{\}'] expected/i, type: 'SyntaxError', message: 'Missing brace', suggestion: 'Check that all opening braces { have matching closing braces }' },
+  { pattern: /error: reached end of file while parsing/i, type: 'SyntaxError', message: 'Incomplete code', suggestion: 'Check for missing closing braces } at the end of your class or method' },
   
   // C/C++ errors
   { pattern: /error: expected ';'/i, type: 'SyntaxError', message: 'Missing semicolon', suggestion: 'Add a semicolon at the end of the statement' },
   { pattern: /error: '(\w+)' was not declared/i, type: 'DeclarationError', message: 'Variable or function not declared', suggestion: 'Declare the variable before using it, or include the necessary header file' },
-  { pattern: /error: expected '\)'/i, type: 'SyntaxError', message: 'Missing closing parenthesis', suggestion: 'Check that all opening parentheses have matching closing ones' },
+  { pattern: /error: expected ['"\[\(\)\]']/i, type: 'SyntaxError', message: 'Missing bracket or parenthesis', suggestion: 'Check that all opening brackets/parentheses have matching closing ones' },
   { pattern: /segmentation fault/i, type: 'SegmentationFault', message: 'Memory access error (Segmentation fault)', suggestion: 'Check for array bounds, null pointers, and uninitialized variables' },
+  { pattern: /undefined reference to/i, type: 'LinkError', message: 'Undefined reference', suggestion: 'Make sure all functions are defined and libraries are linked correctly' },
+  { pattern: /error: expected .* before/i, type: 'SyntaxError', message: 'Syntax error', suggestion: 'Check for missing punctuation or keywords before the indicated position' },
   
   // Go errors
   { pattern: /undefined: (\w+)/i, type: 'UndefinedError', message: 'Undefined identifier', suggestion: 'Make sure the variable/function is defined and in scope' },
   { pattern: /syntax error: unexpected/i, type: 'SyntaxError', message: 'Syntax error', suggestion: 'Check for missing brackets, parentheses, or keywords' },
   { pattern: /cannot use .* as .* in/i, type: 'TypeError', message: 'Type mismatch', suggestion: 'Check that you are using compatible types' },
+  { pattern: /imported and not used/i, type: 'ImportError', message: 'Unused import', suggestion: 'Remove the unused import or use the imported package' },
+  { pattern: /declared (and|but) not used/i, type: 'UnusedError', message: 'Declared but not used', suggestion: 'Use the variable or remove the declaration' },
   
   // Rust errors
-  { pattern: /error\[E\d+\]: cannot find value `(\w+)`/i, type: 'NotFoundError', message: 'Variable not found', suggestion: 'Declare the variable with let or check for typos' },
-  { pattern: /error\[E\d+\]: expected .*, found/i, type: 'TypeError', message: 'Type mismatch', suggestion: 'Check that your types match the expected types' },
+  { pattern: /error\\[E\\d+\\]: cannot find value `(\\w+)`/i, type: 'NotFoundError', message: 'Variable not found', suggestion: 'Declare the variable with let or check for typos' },
+  { pattern: /error\\[E\\d+\\]: expected .*, found/i, type: 'TypeError', message: 'Type mismatch', suggestion: 'Check that your types match the expected types' },
+  { pattern: /error\\[E\\d+\\]: mismatched types/i, type: 'TypeError', message: 'Type mismatch', suggestion: 'Ensure the types match what is expected' },
+  { pattern: /error\\[E\\d+\\]: borrow/i, type: 'BorrowError', message: 'Borrow checker error', suggestion: 'Check ownership and borrowing rules. Consider using clone() or references' },
+  
+  // Ruby errors
+  { pattern: /undefined method/i, type: 'MethodError', message: 'Undefined method', suggestion: 'Check that the method exists for the object type' },
+  { pattern: /undefined local variable/i, type: 'NameError', message: 'Undefined variable', suggestion: 'Define the variable before using it' },
+  
+  // PHP errors
+  { pattern: /Parse error/i, type: 'ParseError', message: 'PHP parse error', suggestion: 'Check for syntax errors like missing semicolons or brackets' },
+  { pattern: /Undefined variable/i, type: 'UndefinedError', message: 'Undefined variable', suggestion: 'Define the variable before using it' },
   
   // General errors
   { pattern: /timeout|timed? out/i, type: 'TimeoutError', message: 'Execution timed out', suggestion: 'Your code is taking too long. Check for infinite loops or optimize your algorithm' },
-  { pattern: /memory limit|out of memory/i, type: 'MemoryError', message: 'Memory limit exceeded', suggestion: 'Your code is using too much memory. Try optimizing data structures or reducing array sizes' },
+  { pattern: /memory limit|out of memory|killed/i, type: 'MemoryError', message: 'Memory limit exceeded', suggestion: 'Your code is using too much memory. Try optimizing data structures or reducing array sizes' },
   { pattern: /compilation failed|compile error/i, type: 'CompilationError', message: 'Code failed to compile', suggestion: 'Check for syntax errors and make sure all required imports are included' },
+  { pattern: /permission denied/i, type: 'PermissionError', message: 'Permission denied', suggestion: 'The operation is not allowed in this environment' },
+  { pattern: /stack overflow/i, type: 'StackOverflow', message: 'Stack overflow', suggestion: 'Check for infinite recursion or very deep recursion. Add a base case or use iteration instead' },
 ]
 
 function parseError(output: string, language: string): { errorType: string; suggestion: string } | null {
@@ -303,6 +526,7 @@ export default async function handler(
     
     try {
       // Try to use the Go exec-engine service
+      const fileName = getFileName(language, code)
       const response = await fetch(`${execEngineUrl}/run`, {
         method: 'POST',
         headers: {
@@ -311,7 +535,7 @@ export default async function handler(
         body: JSON.stringify({
           language,
           files: {
-            [`main.${getFileExtension(language)}`]: code
+            [fileName]: code
           },
           stdin: stdin || '',
           timeLimitSeconds: Math.min(timeLimit, 60),
@@ -343,11 +567,14 @@ export default async function handler(
           exitCode: result.exitCode || 0
         })
       } else {
-        // Parse and format error
+        // Parse and format error - sanitize to remove temp paths
         let errorOutput = result.stderr || result.stdout || responseText
         if (result.stdout && result.stderr) {
           errorOutput = result.stdout + '\n' + result.stderr
         }
+        
+        // Sanitize the error output
+        errorOutput = sanitizeErrorOutput(errorOutput, language)
         
         const errorInfo = parseError(errorOutput, language)
         const formattedError = formatUserFriendlyError(errorOutput, language)
@@ -356,7 +583,7 @@ export default async function handler(
           success: false,
           output: formattedError,
           stdout: result.stdout,
-          stderr: result.stderr,
+          stderr: sanitizeErrorOutput(result.stderr || '', language),
           error: errorOutput,
           errorType: errorInfo?.errorType,
           suggestion: errorInfo?.suggestion,
@@ -521,6 +748,9 @@ async function executePistonAPI(
 ): Promise<{ success: boolean; output?: string; stdout?: string; stderr?: string; error?: string; exitCode?: number }> {
   const pistonUrl = 'https://emkc.org/api/v2/piston/execute'
   
+  // For Java, extract the class name to use as filename
+  const fileName = getFileName(language, code)
+  
   const response = await fetch(pistonUrl, {
     method: 'POST',
     headers: {
@@ -531,7 +761,7 @@ async function executePistonAPI(
       version: config.pistonVersion || '*',
       files: [
         {
-          name: `main.${config.fileExtension}`,
+          name: fileName,
           content: code
         }
       ],
@@ -557,11 +787,12 @@ async function executePistonAPI(
 
   // Check for compilation errors
   if (result.compile && result.compile.code !== 0) {
+    const compileError = sanitizeErrorOutput(result.compile.stderr || result.compile.output || 'Compilation failed', language)
     return {
       success: false,
       stdout: result.compile.stdout || '',
-      stderr: result.compile.stderr || result.compile.output || 'Compilation failed',
-      error: result.compile.stderr || result.compile.output || 'Compilation failed',
+      stderr: compileError,
+      error: compileError,
       exitCode: result.compile.code || 1
     }
   }
@@ -575,12 +806,13 @@ async function executePistonAPI(
       exitCode: 0
     }
   } else {
+    const sanitizedError = sanitizeErrorOutput(stderr || output, language)
     return {
       success: false,
       output: output,
       stdout,
-      stderr,
-      error: stderr || output,
+      stderr: sanitizedError,
+      error: sanitizedError,
       exitCode
     }
   }
@@ -588,6 +820,75 @@ async function executePistonAPI(
 
 function getFileExtension(language: string): string {
   return LANGUAGE_CONFIGS[language]?.fileExtension || 'txt'
+}
+
+// Extract public class name from Java code
+function extractJavaClassName(code: string): string {
+  const publicClassMatch = code.match(/public\s+class\s+(\w+)/)
+  if (publicClassMatch) {
+    return publicClassMatch[1]
+  }
+  // If no public class, look for any class
+  const classMatch = code.match(/class\s+(\w+)/)
+  if (classMatch) {
+    return classMatch[1]
+  }
+  return 'Main'
+}
+
+// Get the appropriate filename for a language
+function getFileName(language: string, code: string): string {
+  // Java needs special handling - filename must match public class name
+  if (language === 'java') {
+    const className = extractJavaClassName(code)
+    return `${className}.java`
+  }
+  
+  // Kotlin can also have class-based naming but typically works with main.kt
+  if (language === 'kotlin') {
+    const classMatch = code.match(/class\s+(\w+)/)
+    if (classMatch && code.includes('fun main')) {
+      return 'main.kt'
+    }
+  }
+  
+  // Scala object naming
+  if (language === 'scala') {
+    const objectMatch = code.match(/object\s+(\w+)/)
+    if (objectMatch) {
+      return `${objectMatch[1]}.scala`
+    }
+  }
+  
+  // Use mainFileName from config if available, otherwise construct from extension
+  const config = LANGUAGE_CONFIGS[language]
+  if (config?.mainFileName) {
+    return config.mainFileName
+  }
+  
+  return `main.${getFileExtension(language)}`
+}
+
+// Sanitize error output to remove temp paths and format nicely
+function sanitizeErrorOutput(error: string, language: string): string {
+  let sanitized = error
+  
+  // Remove temp directory paths (Windows and Unix)
+  sanitized = sanitized.replace(/[A-Z]:\\Users\\[^\\]+\\AppData\\Local\\Temp\\[^\\]+\\/gi, '')
+  sanitized = sanitized.replace(/C:\\[^:]+\\/gi, '')
+  sanitized = sanitized.replace(/\/tmp\/[^\/]+\//g, '')
+  sanitized = sanitized.replace(/\/var\/[^\/]+\/[^\/]+\//g, '')
+  sanitized = sanitized.replace(/coderipper-native-\d+[\\\/]/gi, '')
+  
+  // Clean up file references to just show the filename
+  sanitized = sanitized.replace(/\\+/g, '/') // Normalize to forward slashes
+  
+  // Remove redundant "Compilation failed:" prefix if error message is descriptive
+  if (sanitized.includes('error:')) {
+    sanitized = sanitized.replace(/^Compilation failed:\s*/i, '')
+  }
+  
+  return sanitized.trim()
 }
 
 // Fallback simulation when exec-engine is not available

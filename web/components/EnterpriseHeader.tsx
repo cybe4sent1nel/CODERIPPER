@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
+import { GetStartedButton } from './ui/GetStartedButton';
 import {
   Search,
   Gem,
@@ -295,12 +296,7 @@ export default function EnterpriseHeader({
                   >
                     Sign In
                   </button>
-                  <button
-                    onClick={() => setShowAuthModal(true)}
-                    className="px-4 py-2 rounded-xl text-sm bg-gradient-to-r from-violet-600 to-blue-600 text-white font-medium hover:from-violet-500 hover:to-blue-500 transition-all shadow-lg shadow-violet-500/25"
-                  >
-                    Get Started
-                  </button>
+                  <GetStartedButton onClick={() => setShowAuthModal(true)} />
                 </div>
               )}
             </div>

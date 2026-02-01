@@ -7,7 +7,6 @@ import toast from 'react-hot-toast'
 import { v4 as uuidv4 } from 'uuid'
 
 import { 
-  PlayIcon, 
   SparklesIcon,
   ShareIcon,
   DocumentArrowDownIcon,
@@ -27,6 +26,8 @@ import {
   MapIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline'
+
+import { RunCodeButton } from './ui/RunCodeButton'
 
 import { LANGUAGES, type LanguageKey } from '@/lib/constants'
 import InteractiveTerminal from './InteractiveTerminal'
@@ -1245,14 +1246,12 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                 </div>
                 
                 <div className="relative group">
-                  <Button 
+                  <RunCodeButton 
                     onClick={runCode}
                     disabled={isRunning}
-                    className="shine ml-2"
-                  >
-                    <PlayIcon className="w-4 h-4 mr-2" />
-                    {isRunning ? 'Running...' : 'Run Code'}
-                  </Button>
+                    isRunning={isRunning}
+                    className="ml-2"
+                  />
                   <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
                     Execute Code (Ctrl+Enter)
                   </span>
