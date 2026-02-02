@@ -61,9 +61,9 @@ const badgeIcons: Record<string, { icon: typeof Trophy; color: string; label: st
 
 const getRankDisplay = (rank: number) => {
   if (rank === 1) return { icon: Crown, color: 'text-yellow-400', bg: 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border-yellow-500/50' };
-  if (rank === 2) return { icon: Medal, color: 'text-gray-300', bg: 'bg-gradient-to-r from-gray-400/20 to-gray-500/20 border-gray-400/50' };
+  if (rank === 2) return { icon: Medal, color: 'text-gray-400 dark:text-gray-300', bg: 'bg-gradient-to-r from-gray-400/20 to-gray-500/20 border-gray-400/50' };
   if (rank === 3) return { icon: Medal, color: 'text-amber-600', bg: 'bg-gradient-to-r from-amber-600/20 to-orange-600/20 border-amber-600/50' };
-  return { icon: null, color: 'text-gray-400', bg: 'bg-gray-800/50 border-gray-700/50' };
+  return { icon: null, color: 'text-gray-400', bg: 'bg-gray-100/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50' };
 };
 
 const getTimeAgo = (dateString: string) => {
@@ -128,28 +128,28 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
   const languages = Array.from(new Set(leaderboard.map(e => e.favoriteLanguage)));
 
   return (
-    <div className={`bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden ${className}`}>
+    <div className={`bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="p-6 border-b border-gray-700/50">
+      <div className="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-gradient-to-br from-yellow-500/20 to-amber-500/20 rounded-xl">
               <Trophy className="w-6 h-6 text-yellow-400" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 Global Leaderboard
                 <Sparkles className="w-5 h-5 text-yellow-400" />
               </h2>
-              <p className="text-sm text-gray-400">Top coders ranked by points & streaks</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Top coders ranked by points & streaks</p>
             </div>
           </div>
           <button
             onClick={() => fetchLeaderboard()}
-            className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded-lg transition-colors"
             title="Refresh"
           >
-            <RefreshCw className={`w-5 h-5 text-gray-400 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-5 h-5 text-gray-500 dark:text-gray-400 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
 
@@ -157,13 +157,13 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50"
+              className="w-full pl-10 pr-4 py-2 bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500/50"
             />
           </div>
 
@@ -179,8 +179,8 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                 onClick={() => setSortBy(key as typeof sortBy)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   sortBy === key
-                    ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50'
-                    : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:bg-gray-700/50'
+                    ? 'bg-blue-500/20 text-blue-500 dark:text-blue-400 border border-blue-500/50'
+                    : 'bg-gray-100/50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 border border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -194,8 +194,8 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
               showFilters || selectedLanguage !== 'all'
-                ? 'bg-purple-500/20 text-purple-400 border border-purple-500/50'
-                : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:bg-gray-700/50'
+                ? 'bg-purple-500/20 text-purple-500 dark:text-purple-400 border border-purple-500/50'
+                : 'bg-gray-100/50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 border border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
             }`}
           >
             <Filter className="w-4 h-4" />
@@ -212,13 +212,13 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-700/50">
+              <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
                 <button
                   onClick={() => setSelectedLanguage('all')}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     selectedLanguage === 'all'
                       ? 'bg-blue-500 text-white'
-                      : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50'
+                      : 'bg-gray-100/50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
                   }`}
                 >
                   All Languages
@@ -230,7 +230,7 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                       selectedLanguage === lang
                         ? 'bg-blue-500 text-white'
-                        : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50'
+                        : 'bg-gray-100/50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
                     }`}
                   >
                     <span className={`w-2 h-2 rounded-full ${languageColors[lang] || languageColors.default}`} />
@@ -272,12 +272,12 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
             <RefreshCw className="w-8 h-8 text-blue-400 animate-spin" />
           </div>
         ) : filteredLeaderboard.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
             <Users className="w-12 h-12 mb-3 opacity-50" />
             <p>No users found</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-gray-200/50 dark:divide-gray-800/50">
             {filteredLeaderboard.map((entry, index) => {
               const rankDisplay = getRankDisplay(entry.rank);
               const isCurrentUser = entry.id === currentUserId;
@@ -295,7 +295,7 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                     className={`px-6 py-4 cursor-pointer transition-colors ${
                       isCurrentUser
                         ? 'bg-blue-500/10 hover:bg-blue-500/20'
-                        : 'hover:bg-gray-800/50'
+                        : 'hover:bg-gray-100/50 dark:hover:bg-gray-800/50'
                     } ${entry.rank <= 3 ? rankDisplay.bg + ' border-l-4' : ''}`}
                   >
                     <div className="flex items-center gap-4">
@@ -304,7 +304,7 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                         {rankDisplay.icon ? (
                           <rankDisplay.icon className={`w-6 h-6 mx-auto ${rankDisplay.color}`} />
                         ) : (
-                          <span className="text-lg font-bold text-gray-500">#{entry.rank}</span>
+                          <span className="text-lg font-bold text-gray-400 dark:text-gray-500">#{entry.rank}</span>
                         )}
                       </div>
 
@@ -321,14 +321,14 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                       {/* User Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className={`font-semibold truncate ${isCurrentUser ? 'text-blue-400' : 'text-white'}`}>
+                          <span className={`font-semibold truncate ${isCurrentUser ? 'text-blue-500 dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>
                             {entry.username}
                           </span>
                           {isCurrentUser && (
                             <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs rounded-full">You</span>
                           )}
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-400">
+                        <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                           <span className="flex items-center gap-1">
                             <Code className="w-3 h-3" />
                             {entry.favoriteLanguage}
@@ -347,26 +347,26 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                             <Flame className="w-4 h-4" />
                             {entry.streak}
                           </div>
-                          <div className="text-xs text-gray-500">Streak</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">Streak</div>
                         </div>
                         <div className="text-center">
-                          <div className="flex items-center gap-1 text-green-400 font-semibold">
+                          <div className="flex items-center gap-1 text-green-500 dark:text-green-400 font-semibold">
                             <Target className="w-4 h-4" />
                             {entry.challengesSolved}
                           </div>
-                          <div className="text-xs text-gray-500">Solved</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">Solved</div>
                         </div>
                         <div className="text-center min-w-[80px]">
-                          <div className="flex items-center gap-1 text-yellow-400 font-bold text-lg">
+                          <div className="flex items-center gap-1 text-yellow-500 dark:text-yellow-400 font-bold text-lg">
                             <Star className="w-4 h-4" />
                             {entry.totalPoints.toLocaleString()}
                           </div>
-                          <div className="text-xs text-gray-500">Points</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">Points</div>
                         </div>
                       </div>
 
                       {/* Expand Arrow */}
-                      <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                     </div>
                   </div>
 
@@ -377,12 +377,12 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden bg-gray-800/30"
+                        className="overflow-hidden bg-gray-100/30 dark:bg-gray-800/30"
                       >
                         <div className="px-6 py-4 ml-16">
                           <div className="flex items-center gap-2 mb-3">
                             <Award className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm font-medium text-gray-300">Badges Earned</span>
+                            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Badges Earned</span>
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {entry.badges.length > 0 ? entry.badges.map(badge => {
@@ -391,15 +391,15 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
                               return (
                                 <div
                                   key={badge}
-                                  className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700/50 rounded-full"
+                                  className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200/50 dark:bg-gray-700/50 rounded-full"
                                   title={badgeInfo.label}
                                 >
                                   <badgeInfo.icon className={`w-4 h-4 ${badgeInfo.color}`} />
-                                  <span className="text-xs text-gray-300">{badgeInfo.label}</span>
+                                  <span className="text-xs text-gray-600 dark:text-gray-300">{badgeInfo.label}</span>
                                 </div>
                               );
                             }) : (
-                              <span className="text-sm text-gray-500">No badges yet</span>
+                              <span className="text-sm text-gray-400 dark:text-gray-500">No badges yet</span>
                             )}
                           </div>
                         </div>
@@ -414,8 +414,8 @@ export default function GlobalLeaderboard({ currentUserId, className = '' }: Lea
       </div>
 
       {/* Footer Stats */}
-      <div className="px-6 py-4 bg-gray-800/30 border-t border-gray-700/50">
-        <div className="flex items-center justify-between text-sm text-gray-400">
+      <div className="px-6 py-4 bg-gray-100/30 dark:bg-gray-800/30 border-t border-gray-200/50 dark:border-gray-700/50">
+        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
           <span className="flex items-center gap-2">
             <Users className="w-4 h-4" />
             {leaderboard.length} Active Coders

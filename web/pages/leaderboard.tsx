@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { NextSeo } from 'next-seo';
 import { motion } from 'framer-motion';
+import { useTheme } from 'next-themes';
 import { 
   Trophy, Brain, Flame, Star, Users, Target, Calendar,
-  ChevronLeft, Sparkles, Code, Zap
+  ChevronLeft, Sparkles, Code, Zap, Sun, Moon
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -31,6 +32,12 @@ export default function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState<'leaderboard' | 'challenges'>('challenges');
   const [totalPoints, setTotalPoints] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Initialize user from localStorage
   useEffect(() => {
@@ -93,55 +100,69 @@ export default function LeaderboardPage() {
         description="Compete with coders worldwide, solve daily challenges, and climb the leaderboard!"
       />
       
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
         {/* Background Effects */}
         <div className="fixed inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 pointer-events-none" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent pointer-events-none" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/10 dark:from-purple-900/20 via-transparent to-transparent pointer-events-none" />
 
         {/* Header */}
-        <header className="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/80 border-b border-gray-800/50">
+        <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800/50">
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Link 
                   href="/"
-                  className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                   <span>Back to Editor</span>
                 </Link>
-                <div className="w-px h-6 bg-gray-700" />
+                <div className="w-px h-6 bg-gray-300 dark:bg-gray-700" />
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-gradient-to-br from-yellow-500/20 to-amber-500/20 rounded-xl">
-                    <Trophy className="w-6 h-6 text-yellow-400" />
+                    <Trophy className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold text-white">CodeRipper Arena</h1>
-                    <p className="text-xs text-gray-400">Compete • Challenge • Conquer</p>
+                    <h1 className="text-xl font-bold text-gray-900 dark:text-white">CodeRipper Arena</h1>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Compete • Challenge • Conquer</p>
                   </div>
                 </div>
               </div>
 
-              {/* User Stats */}
+              {/* User Stats & Theme Toggle */}
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-3 px-4 py-2 bg-gray-800/50 rounded-xl">
-                  <div className="flex items-center gap-1 text-orange-400">
+                {/* Theme Toggle */}
+                {mounted && (
+                  <button
+                    onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+                    className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/50 transition-colors"
+                    aria-label="Toggle theme"
+                  >
+                    {resolvedTheme === 'dark' ? (
+                      <Sun className="w-5 h-5 text-yellow-500" />
+                    ) : (
+                      <Moon className="w-5 h-5 text-gray-600" />
+                    )}
+                  </button>
+                )}
+                <div className="flex items-center gap-3 px-4 py-2 bg-gray-100 dark:bg-gray-800/50 rounded-xl">
+                  <div className="flex items-center gap-1 text-orange-500 dark:text-orange-400">
                     <Flame className="w-5 h-5" />
                     <span className="font-bold">{streak}</span>
                   </div>
-                  <div className="w-px h-6 bg-gray-700" />
-                  <div className="flex items-center gap-1 text-yellow-400">
+                  <div className="w-px h-6 bg-gray-300 dark:bg-gray-700" />
+                  <div className="flex items-center gap-1 text-yellow-500 dark:text-yellow-400">
                     <Star className="w-5 h-5" />
                     <span className="font-bold">{totalPoints}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-2 bg-gray-800/50 rounded-xl">
+                <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800/50 rounded-xl">
                   <img 
                     src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`}
                     alt={username}
                     className="w-8 h-8 rounded-full"
                   />
-                  <span className="text-white font-medium">{username}</span>
+                  <span className="text-gray-900 dark:text-white font-medium">{username}</span>
                 </div>
               </div>
             </div>
@@ -153,8 +174,8 @@ export default function LeaderboardPage() {
           {/* Language Selection */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
-              <Code className="w-5 h-5 text-purple-400" />
-              <h2 className="text-lg font-semibold text-white">Select Your Language</h2>
+              <Code className="w-5 h-5 text-purple-500 dark:text-purple-400" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Select Your Language</h2>
             </div>
             <div className="flex flex-wrap gap-2">
               {LANGUAGES.map(lang => (
@@ -164,7 +185,7 @@ export default function LeaderboardPage() {
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
                     selectedLanguage === lang.id
                       ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/25'
-                      : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-gray-700/50'
+                      : 'bg-white dark:bg-gray-800/50 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 border border-gray-200 dark:border-gray-700/50'
                   }`}
                 >
                   <span className={`w-2 h-2 rounded-full ${lang.color}`} />
@@ -181,7 +202,7 @@ export default function LeaderboardPage() {
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
                 activeTab === 'challenges'
                   ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
-                  : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 border border-gray-700/50'
+                  : 'bg-white dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 border border-gray-200 dark:border-gray-700/50'
               }`}
             >
               <Brain className="w-5 h-5" />
@@ -193,7 +214,7 @@ export default function LeaderboardPage() {
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
                 activeTab === 'leaderboard'
                   ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white shadow-lg shadow-yellow-500/25'
-                  : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 border border-gray-700/50'
+                  : 'bg-white dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 border border-gray-200 dark:border-gray-700/50'
               }`}
             >
               <Trophy className="w-5 h-5" />
@@ -221,59 +242,59 @@ export default function LeaderboardPage() {
                 </div>
                 <div className="space-y-6">
                   {/* Quick Stats */}
-                  <div className="bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 p-6">
-                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                      <Target className="w-5 h-5 text-green-400" />
+                  <div className="bg-white dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-gray-700/50 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <Target className="w-5 h-5 text-green-500 dark:text-green-400" />
                       Quick Stats
                     </h3>
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl">
-                        <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                           <Calendar className="w-4 h-4" />
                           <span>Today&apos;s Date</span>
                         </div>
-                        <span className="text-white font-medium">
+                        <span className="text-gray-900 dark:text-white font-medium">
                           {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl">
-                        <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                           <Zap className="w-4 h-4" />
                           <span>Challenges Available</span>
                         </div>
-                        <span className="text-green-400 font-medium">3 / day</span>
+                        <span className="text-green-600 dark:text-green-400 font-medium">3 / day</span>
                       </div>
-                      <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-xl">
-                        <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                           <Star className="w-4 h-4" />
                           <span>Max Points Today</span>
                         </div>
-                        <span className="text-yellow-400 font-medium">60 pts</span>
+                        <span className="text-yellow-600 dark:text-yellow-400 font-medium">60 pts</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Tips */}
-                  <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-6">
-                    <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-purple-400" />
+                  <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl border border-purple-300/30 dark:border-purple-500/20 p-6">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-purple-500 dark:text-purple-400" />
                       Pro Tips
                     </h3>
-                    <ul className="space-y-2 text-sm text-gray-300">
+                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400">•</span>
+                        <span className="text-purple-500 dark:text-purple-400">•</span>
                         Complete all 3 challenges daily to maximize points
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400">•</span>
+                        <span className="text-purple-500 dark:text-purple-400">•</span>
                         Build your streak by solving at least 1 challenge daily
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400">•</span>
+                        <span className="text-purple-500 dark:text-purple-400">•</span>
                         Use hints wisely - they don&apos;t reduce your points!
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400">•</span>
+                        <span className="text-purple-500 dark:text-purple-400">•</span>
                         Try different languages to become a polyglot coder
                       </li>
                     </ul>
@@ -287,9 +308,9 @@ export default function LeaderboardPage() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-gray-800/50 mt-12">
+        <footer className="border-t border-gray-200 dark:border-gray-800/50 mt-12">
           <div className="max-w-7xl mx-auto px-4 py-6">
-            <div className="flex items-center justify-between text-sm text-gray-500">
+            <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-500">
               <span>© 2024 CodeRipper. All rights reserved.</span>
               <div className="flex items-center gap-4">
                 <span>Challenges refresh daily at midnight UTC</span>

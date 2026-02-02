@@ -240,62 +240,62 @@ export default function DailyChallenges({
   const allSolved = solvedCount === challenges.length && challenges.length > 0;
 
   return (
-    <div className={`bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden ${className}`}>
+    <div className={`bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="p-6 border-b border-gray-700/50">
+      <div className="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl">
               <Brain className="w-6 h-6 text-purple-400" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 Daily Challenges
                 <Sparkles className="w-5 h-5 text-purple-400" />
               </h2>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 3 new {language} challenges every day
               </p>
             </div>
           </div>
           <button
             onClick={fetchChallenges}
-            className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded-lg transition-colors"
             title="Refresh"
           >
-            <RefreshCw className={`w-5 h-5 text-gray-400 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-5 h-5 text-gray-500 dark:text-gray-400 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
 
         {/* Stats Bar */}
-        <div className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-xl">
+        <div className="flex items-center gap-4 p-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-xl">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-orange-500/20 rounded-lg">
               <Flame className="w-5 h-5 text-orange-400" />
             </div>
             <div>
-              <div className="text-lg font-bold text-white">{streak}</div>
-              <div className="text-xs text-gray-400">Day Streak</div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white">{streak}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Day Streak</div>
             </div>
           </div>
-          <div className="w-px h-10 bg-gray-700" />
+          <div className="w-px h-10 bg-gray-300 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
             <div className="p-2 bg-yellow-500/20 rounded-lg">
               <Star className="w-5 h-5 text-yellow-400" />
             </div>
             <div>
-              <div className="text-lg font-bold text-white">{todayPoints}</div>
-              <div className="text-xs text-gray-400">Today&apos;s Points</div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white">{todayPoints}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Today&apos;s Points</div>
             </div>
           </div>
-          <div className="w-px h-10 bg-gray-700" />
+          <div className="w-px h-10 bg-gray-300 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
             <div className="p-2 bg-green-500/20 rounded-lg">
               <Target className="w-5 h-5 text-green-400" />
             </div>
             <div>
-              <div className="text-lg font-bold text-white">{solvedCount}/{challenges.length}</div>
-              <div className="text-xs text-gray-400">Completed</div>
+              <div className="text-lg font-bold text-gray-900 dark:text-white">{solvedCount}/{challenges.length}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Completed</div>
             </div>
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function DailyChallenges({
         {loading && challenges.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12">
             <RefreshCw className="w-10 h-10 text-purple-400 animate-spin mb-4" />
-            <p className="text-gray-400">Generating your challenges...</p>
+            <p className="text-gray-500 dark:text-gray-400">Generating your challenges...</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-12">
@@ -324,11 +324,11 @@ export default function DailyChallenges({
             <div className="p-4 bg-green-500/20 rounded-full mb-4">
               <Trophy className="w-12 h-12 text-green-400" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">All Challenges Complete! 🎉</h3>
-            <p className="text-gray-400 mb-4">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">All Challenges Complete! 🎉</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
               You earned {todayPoints} points today. Come back tomorrow for new challenges!
             </p>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500">
               <Clock className="w-4 h-4" />
               New challenges in {getTimeUntilMidnight()}
             </div>
@@ -348,7 +348,7 @@ export default function DailyChallenges({
                     const Icon = typeIcons[selectedChallenge.type];
                     return <Icon className="w-5 h-5 text-purple-400" />;
                   })()}
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
                     {typeLabels[selectedChallenge.type]}
                   </span>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${difficultyConfig[selectedChallenge.difficulty].bg} ${difficultyConfig[selectedChallenge.difficulty].color}`}>
@@ -359,23 +359,23 @@ export default function DailyChallenges({
                     {selectedChallenge.points} pts
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-white">{selectedChallenge.title}</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{selectedChallenge.title}</h3>
               </div>
               <button
                 onClick={() => { setSelectedChallenge(null); resetChallenge(); }}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 ✕
               </button>
             </div>
 
             {/* Description */}
-            <p className="text-gray-300">{selectedChallenge.description}</p>
+            <p className="text-gray-600 dark:text-gray-300">{selectedChallenge.description}</p>
 
             {/* Code Block (if any) */}
             {selectedChallenge.code && (
               <div className="relative">
-                <pre className="p-4 bg-gray-950 rounded-xl overflow-x-auto text-sm font-mono text-gray-300">
+                <pre className="p-4 bg-gray-100 dark:bg-gray-950 rounded-xl overflow-x-auto text-sm font-mono text-gray-800 dark:text-gray-300">
                   <code>{selectedChallenge.code}</code>
                 </pre>
               </div>
@@ -400,8 +400,8 @@ export default function DailyChallenges({
                           : showWrong
                           ? 'bg-red-500/20 border-red-500 text-red-300'
                           : isSelected
-                          ? 'bg-purple-500/20 border-purple-500 text-purple-300'
-                          : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:bg-gray-800 hover:border-gray-600'
+                          ? 'bg-purple-500/20 border-purple-500 text-purple-600 dark:text-purple-300'
+                          : 'bg-gray-100/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
                       } ${progress[selectedChallenge.id]?.solved ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       <div className="flex items-center gap-3">
@@ -409,7 +409,7 @@ export default function DailyChallenges({
                           showCorrect ? 'bg-green-500 text-white' :
                           showWrong ? 'bg-red-500 text-white' :
                           isSelected ? 'bg-purple-500 text-white' :
-                          'bg-gray-700 text-gray-400'
+                          'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                         }`}>
                           {option.id.toUpperCase()}
                         </span>
@@ -446,7 +446,7 @@ export default function DailyChallenges({
                     )}
                   </div>
                   {selectedChallenge.explanation && (
-                    <p className="text-sm text-gray-300">{selectedChallenge.explanation}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">{selectedChallenge.explanation}</p>
                   )}
                 </motion.div>
               )}
@@ -457,7 +457,7 @@ export default function DailyChallenges({
               <button
                 onClick={() => setShowHint(!showHint)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  showHint ? 'bg-yellow-500/20 text-yellow-400' : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50'
+                  showHint ? 'bg-yellow-500/20 text-yellow-500 dark:text-yellow-400' : 'bg-gray-100/50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
                 }`}
               >
                 <Lightbulb className="w-4 h-4" />
@@ -468,7 +468,7 @@ export default function DailyChallenges({
                 {showResult && !isCorrect && !progress[selectedChallenge.id]?.solved && (
                   <button
                     onClick={resetChallenge}
-                    className="px-4 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+                    className="px-4 py-2 bg-gray-200/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
                   >
                     Try Again
                   </button>
@@ -509,7 +509,7 @@ export default function DailyChallenges({
                       <Lightbulb className="w-4 h-4" />
                       <span className="font-medium">Hint</span>
                     </div>
-                    <p className="text-sm text-gray-300">{selectedChallenge.hint}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">{selectedChallenge.hint}</p>
                   </div>
                 </motion.div>
               )}
@@ -533,7 +533,7 @@ export default function DailyChallenges({
                   className={`w-full p-4 text-left rounded-xl border transition-all ${
                     solved
                       ? 'bg-green-500/10 border-green-500/30'
-                      : 'bg-gray-800/50 border-gray-700/50 hover:bg-gray-800 hover:border-gray-600'
+                      : 'bg-gray-100/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
                   <div className="flex items-center gap-4">
@@ -546,12 +546,12 @@ export default function DailyChallenges({
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs text-gray-400">{typeLabels[challenge.type]}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">{typeLabels[challenge.type]}</span>
                         <span className={`px-2 py-0.5 rounded-full text-xs ${config.bg} ${config.color}`}>
                           {challenge.difficulty}
                         </span>
                       </div>
-                      <h4 className={`font-medium ${solved ? 'text-green-400' : 'text-white'}`}>
+                      <h4 className={`font-medium ${solved ? 'text-green-400' : 'text-gray-900 dark:text-white'}`}>
                         {challenge.title}
                       </h4>
                     </div>
@@ -560,7 +560,7 @@ export default function DailyChallenges({
                         <Star className="w-4 h-4" />
                         {challenge.points}
                       </span>
-                      <ChevronRight className="w-5 h-5 text-gray-500" />
+                      <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     </div>
                   </div>
                 </motion.button>

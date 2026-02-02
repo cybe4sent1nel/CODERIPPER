@@ -38,6 +38,10 @@ import {
   Shield,
   Gem,
   Medal,
+  Share2,
+  Twitter,
+  Linkedin,
+  Facebook,
 } from 'lucide-react';
 
 interface ViralFeaturesProps {
@@ -47,38 +51,38 @@ interface ViralFeaturesProps {
   isRunning?: boolean;
 }
 
-// Achievement definitions with 5 tiers
+// Achievement definitions with 5 tiers - Using Custom Badge Images
 const achievements = [
   // Streak achievements
-  { id: 'streak_3', name: 'Getting Started', description: '3 day streak', icon: Flame, tier: 'bronze', requirement: { type: 'streak', value: 3 } },
-  { id: 'streak_7', name: 'Weekly Warrior', description: '7 day streak', icon: Flame, tier: 'silver', requirement: { type: 'streak', value: 7 } },
-  { id: 'streak_14', name: 'Fortnight Fighter', description: '14 day streak', icon: Flame, tier: 'gold', requirement: { type: 'streak', value: 14 } },
-  { id: 'streak_30', name: 'Monthly Master', description: '30 day streak', icon: Flame, tier: 'platinum', requirement: { type: 'streak', value: 30 } },
-  { id: 'streak_100', name: 'Legendary Coder', description: '100 day streak', icon: Crown, tier: 'diamond', requirement: { type: 'streak', value: 100 } },
+  { id: 'streak_3', name: 'Getting Started', description: '3 day streak', icon: Flame, tier: 'bronze', requirement: { type: 'streak', value: 3 }, badgeImage: '/badges/getting started.png' },
+  { id: 'streak_7', name: 'Consistency King', description: '7 day streak', icon: Flame, tier: 'silver', requirement: { type: 'streak', value: 7 }, badgeImage: '/badges/consistency_badge.png' },
+  { id: 'streak_14', name: 'Persistent Coder', description: '14 day streak', icon: Flame, tier: 'gold', requirement: { type: 'streak', value: 14 }, badgeImage: '/badges/persistent_badge.png' },
+  { id: 'streak_30', name: 'Undefeated', description: '30 day streak', icon: Flame, tier: 'platinum', requirement: { type: 'streak', value: 30 }, badgeImage: '/badges/undefeated_badge.png' },
+  { id: 'streak_100', name: 'God Tier', description: '100 day streak', icon: Crown, tier: 'diamond', requirement: { type: 'streak', value: 100 }, badgeImage: '/badges/god_tier_badge.png' },
   
   // Execution achievements
-  { id: 'runs_10', name: 'First Steps', description: 'Run code 10 times', icon: Rocket, tier: 'bronze', requirement: { type: 'totalRuns', value: 10 } },
-  { id: 'runs_50', name: 'Getting Warmed Up', description: 'Run code 50 times', icon: Rocket, tier: 'silver', requirement: { type: 'totalRuns', value: 50 } },
-  { id: 'runs_100', name: 'Century Club', description: 'Run code 100 times', icon: Rocket, tier: 'gold', requirement: { type: 'totalRuns', value: 100 } },
-  { id: 'runs_500', name: 'Power User', description: 'Run code 500 times', icon: Zap, tier: 'platinum', requirement: { type: 'totalRuns', value: 500 } },
-  { id: 'runs_1000', name: 'Code Machine', description: 'Run code 1000 times', icon: Dumbbell, tier: 'diamond', requirement: { type: 'totalRuns', value: 1000 } },
+  { id: 'runs_10', name: 'Hello World', description: 'Run code 10 times', icon: Rocket, tier: 'bronze', requirement: { type: 'totalRuns', value: 10 }, badgeImage: '/badges/hello_world_badge.png' },
+  { id: 'runs_50', name: 'Active Coder', description: 'Run code 50 times', icon: Rocket, tier: 'silver', requirement: { type: 'totalRuns', value: 50 }, badgeImage: '/badges/active_badge.png' },
+  { id: 'runs_100', name: 'Compiler', description: 'Run code 100 times', icon: Rocket, tier: 'gold', requirement: { type: 'totalRuns', value: 100 }, badgeImage: '/badges/compiler_badge.png' },
+  { id: 'runs_500', name: 'Mainframe', description: 'Run code 500 times', icon: Zap, tier: 'platinum', requirement: { type: 'totalRuns', value: 500 }, badgeImage: '/badges/mainframe_badge.png' },
+  { id: 'runs_1000', name: 'Overclock', description: 'Run code 1000 times', icon: Dumbbell, tier: 'diamond', requirement: { type: 'totalRuns', value: 1000 }, badgeImage: '/badges/overclock_badge.png' },
   
   // Lines of code achievements
-  { id: 'lines_100', name: 'Scribbler', description: 'Write 100 lines', icon: FileText, tier: 'bronze', requirement: { type: 'linesWritten', value: 100 } },
-  { id: 'lines_500', name: 'Author', description: 'Write 500 lines', icon: BookOpen, tier: 'silver', requirement: { type: 'linesWritten', value: 500 } },
-  { id: 'lines_1000', name: 'Novelist', description: 'Write 1000 lines', icon: Library, tier: 'gold', requirement: { type: 'linesWritten', value: 1000 } },
-  { id: 'lines_5000', name: 'Encyclopedia', description: 'Write 5000 lines', icon: Building2, tier: 'platinum', requirement: { type: 'linesWritten', value: 5000 } },
-  { id: 'lines_10000', name: 'Code Library', description: 'Write 10000 lines', icon: Globe, tier: 'diamond', requirement: { type: 'linesWritten', value: 10000 } },
+  { id: 'lines_100', name: 'Scribe', description: 'Write 100 lines of code', icon: FileText, tier: 'bronze', requirement: { type: 'linesWritten', value: 100 }, badgeImage: '/badges/scribe_badge.png' },
+  { id: 'lines_500', name: 'Scripting Pro', description: 'Write 500 lines of code', icon: BookOpen, tier: 'silver', requirement: { type: 'linesWritten', value: 500 }, badgeImage: '/badges/scripting_badge.png' },
+  { id: 'lines_1000', name: 'Coder', description: 'Write 1000 lines of code', icon: Library, tier: 'gold', requirement: { type: 'linesWritten', value: 1000 }, badgeImage: '/badges/coder_badge.png' },
+  { id: 'lines_5000', name: 'Architect', description: 'Write 5000 lines of code', icon: Building2, tier: 'platinum', requirement: { type: 'linesWritten', value: 5000 }, badgeImage: '/badges/architect_badge.png' },
+  { id: 'lines_10000', name: 'Root Access', description: 'Write 10000 lines of code', icon: Globe, tier: 'diamond', requirement: { type: 'linesWritten', value: 10000 }, badgeImage: '/badges/root_access_badge.png' },
   
   // Language achievements
-  { id: 'lang_3', name: 'Trilingual', description: 'Use 3 languages', icon: Languages, tier: 'bronze', requirement: { type: 'languagesUsed', value: 3 } },
-  { id: 'lang_5', name: 'Polyglot', description: 'Use 5 languages', icon: Languages, tier: 'silver', requirement: { type: 'languagesUsed', value: 5 } },
-  { id: 'lang_8', name: 'Language Expert', description: 'Use 8 languages', icon: Map, tier: 'gold', requirement: { type: 'languagesUsed', value: 8 } },
-  { id: 'lang_12', name: 'Omniglot', description: 'Use 12 languages', icon: Globe, tier: 'platinum', requirement: { type: 'languagesUsed', value: 12 } },
-  { id: 'lang_15', name: 'Universal Coder', description: 'Use 15+ languages', icon: Crown, tier: 'diamond', requirement: { type: 'languagesUsed', value: 15 } },
+  { id: 'lang_3', name: 'Ping', description: 'Use 3 programming languages', icon: Languages, tier: 'bronze', requirement: { type: 'languagesUsed', value: 3 }, badgeImage: '/badges/ping_badge.png' },
+  { id: 'lang_5', name: 'Firewall', description: 'Use 5 programming languages', icon: Languages, tier: 'silver', requirement: { type: 'languagesUsed', value: 5 }, badgeImage: '/badges/firewall_badge.png' },
+  { id: 'lang_8', name: 'Poly-Syntactic', description: 'Use 8 programming languages', icon: Map, tier: 'gold', requirement: { type: 'languagesUsed', value: 8 }, badgeImage: '/badges/poly-syntactic_badge.png' },
+  { id: 'lang_12', name: 'Omniscient', description: 'Use 12 programming languages', icon: Globe, tier: 'platinum', requirement: { type: 'languagesUsed', value: 12 }, badgeImage: '/badges/omniscient_badge.png' },
+  { id: 'lang_15', name: 'Universal Coder', description: 'Use 15+ programming languages', icon: Crown, tier: 'diamond', requirement: { type: 'languagesUsed', value: 15 }, badgeImage: '/badges/universal_badge.png' },
   
   // Speed achievements
-  { id: 'speed_50', name: 'Quick Fingers', description: 'Sub 50ms execution', icon: Timer, tier: 'gold', requirement: { type: 'speed', value: 50 } },
+  { id: 'speed_50', name: 'Quick Fingers', description: 'Sub 50ms code execution', icon: Timer, tier: 'gold', requirement: { type: 'speed', value: 50 }, badgeImage: '/badges/quick_fingers_badge.png' },
 ];
 
 const tierColors = {
@@ -138,7 +142,7 @@ const keyboardShortcuts = [
 ];
 
 export default function ViralFeatures({ code, language, executionTime, isRunning }: ViralFeaturesProps) {
-  const [activeTab, setActiveTab] = useState<'shortcuts' | 'challenges' | 'achievements'>('achievements');
+  const [activeTab, setActiveTab] = useState<'shortcuts' | 'challenges' | 'achievements'>('shortcuts');
   const [statsExpanded, setStatsExpanded] = useState(false);
   const [shortcutsExpanded, setShortcutsExpanded] = useState(false);
   const [stats, setStats] = useState({
@@ -248,27 +252,57 @@ export default function ViralFeatures({ code, language, executionTime, isRunning
   ];
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700/50 overflow-hidden shadow-sm">
-      {/* Achievement Popup */}
+    <div className="h-full flex flex-col bg-white dark:bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700/50 shadow-sm">
+      {/* Achievement Popup - With Badge Image */}
       <AnimatePresence>
         {showAchievementPopup && (
           <motion.div
-            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            initial={{ opacity: 0, y: -50, scale: 0.5 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            exit={{ opacity: 0, y: -30, scale: 0.8 }}
+            transition={{ type: 'spring', bounce: 0.4 }}
             className="absolute top-4 left-1/2 -translate-x-1/2 z-50"
           >
-            <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl bg-white dark:bg-gray-800 bg-gradient-to-r ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].bg} border ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].border} shadow-2xl ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].glow}`}>
-              <div className={`p-2 rounded-xl ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].ribbon}`}>
-                <showAchievementPopup.icon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" />
-                  Achievement Unlocked!
+            <div className="relative">
+              {/* Sparkle Effects */}
+              <motion.div
+                className="absolute -top-2 -left-2"
+                animate={{ scale: [1, 1.3, 1], rotate: [0, 15, 0] }}
+                transition={{ duration: 0.5, repeat: 3 }}
+              >
+                <Sparkles className="w-6 h-6 text-yellow-400" />
+              </motion.div>
+              <motion.div
+                className="absolute -top-1 -right-3"
+                animate={{ scale: [1, 1.4, 1], rotate: [0, -20, 0] }}
+                transition={{ duration: 0.6, repeat: 3, delay: 0.1 }}
+              >
+                <Star className="w-5 h-5 text-pink-400" />
+              </motion.div>
+              
+              {/* Main Popup Card */}
+              <div className={`flex items-center gap-4 px-5 py-4 rounded-2xl bg-white dark:bg-gray-800 shadow-2xl border-2 ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].border}`}>
+                {/* Badge Image */}
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden shadow-lg ring-2 ring-offset-2 ring-offset-white dark:ring-offset-gray-800 ring-yellow-400">
+                  <img
+                    src={showAchievementPopup.badgeImage}
+                    alt={showAchievementPopup.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className={`font-bold ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].text}`}>
-                  {showAchievementPopup.name}
+                
+                {/* Text Content */}
+                <div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                    <Trophy className="w-3 h-3 text-yellow-500" />
+                    Badge Unlocked!
+                  </div>
+                  <div className={`font-bold text-lg ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].text}`}>
+                    {showAchievementPopup.name}
+                  </div>
+                  <div className={`text-xs px-2 py-0.5 rounded-full inline-block mt-1 ${tierColors[showAchievementPopup.tier as keyof typeof tierColors].ribbon} text-white font-medium`}>
+                    {showAchievementPopup.tier.toUpperCase()}
+                  </div>
                 </div>
               </div>
             </div>
@@ -462,7 +496,7 @@ export default function ViralFeatures({ code, language, executionTime, isRunning
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="space-y-3"
+              className="space-y-3 overflow-visible"
             >
               <div className="flex items-center justify-between text-sm mb-4">
                 <span className="text-gray-500 dark:text-gray-400">
@@ -474,53 +508,128 @@ export default function ViralFeatures({ code, language, executionTime, isRunning
                   ))}
                 </div>
               </div>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                {achievements.map((achievement) => {
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 overflow-visible pb-24">
+                {achievements.map((achievement, index) => {
                   const isUnlocked = unlockedAchievements.includes(achievement.id);
                   const colors = tierColors[achievement.tier as keyof typeof tierColors];
+                  // Calculate position for tooltip - left badges go right, right badges go left
+                  const colIndex = index % 5;
+                  const isLeftEdge = colIndex === 0;
+                  const isRightEdge = colIndex === 4;
                   
                   return (
                     <motion.div
                       key={achievement.id}
-                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.98 }}
-                      className={`relative p-3 rounded-xl border-2 ${
-                        isUnlocked
-                          ? `bg-gradient-to-br ${colors.bg} ${colors.border} shadow-lg ${colors.glow}`
-                          : 'bg-gray-100 dark:bg-gray-800/30 border-gray-200 dark:border-gray-700/30 opacity-60'
-                      } transition-all cursor-pointer group`}
-                      title={`${achievement.name}: ${achievement.description}`}
+                      className="relative group cursor-pointer z-0 hover:z-50"
                     >
-                      {/* Tier Badge */}
-                      {isUnlocked && (
-                        <div className={`absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gradient-to-r ${colors.badge} flex items-center justify-center shadow-md ring-2 ring-white dark:ring-gray-900`}>
-                          <CheckCircle className="w-3 h-3 text-white" />
-                        </div>
-                      )}
+                      {/* Badge Image Container */}
+                      <div className={`relative aspect-square rounded-xl overflow-hidden ${
+                        isUnlocked
+                          ? 'shadow-lg ring-2 ring-offset-2 ring-offset-white dark:ring-offset-gray-900'
+                          : 'opacity-50 grayscale'
+                      } ${isUnlocked ? colors.border.replace('border-', 'ring-') : 'ring-gray-300 dark:ring-gray-600'}`}>
+                        {/* Badge Image */}
+                        <img
+                          src={achievement.badgeImage}
+                          alt={achievement.name}
+                          className={`w-full h-full object-cover ${isUnlocked ? '' : 'filter grayscale'}`}
+                          loading="lazy"
+                        />
+                        
+                        {/* Shine Effect on Hover */}
+                        {isUnlocked && (
+                          <div className="absolute inset-0 overflow-hidden">
+                            <div className="absolute -top-full -left-full w-[200%] h-[200%] bg-gradient-to-br from-white/0 via-white/30 to-white/0 rotate-45 group-hover:translate-x-full group-hover:translate-y-full transition-transform duration-700" />
+                          </div>
+                        )}
+                        
+                        {/* Lock Overlay for Locked Badges */}
+                        {!isUnlocked && (
+                          <div className="absolute inset-0 bg-gray-900/40 flex items-center justify-center">
+                            <div className="w-8 h-8 bg-gray-800/80 rounded-full flex items-center justify-center">
+                              <Shield className="w-4 h-4 text-gray-400" />
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Tier Indicator - Minimal */}
+                        {isUnlocked && (
+                          <div className={`absolute bottom-0 left-0 right-0 h-3 ${colors.ribbon} flex items-center justify-center`}>
+                            <span className="text-[6px] font-bold text-white uppercase tracking-tight leading-none">
+                              {achievement.tier}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                       
-                      {/* Shine Effect for Unlocked */}
-                      {isUnlocked && (
-                        <div className="absolute inset-0 rounded-xl overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                        </div>
-                      )}
-                      
-                      <div className="flex flex-col items-center text-center relative">
-                        <div className={`p-2.5 rounded-xl ${isUnlocked ? `bg-gradient-to-br ${colors.badge}` : 'bg-gray-200 dark:bg-gray-700'} mb-2 shadow-inner`}>
-                          <achievement.icon className={`w-5 h-5 ${isUnlocked ? 'text-white' : 'text-gray-400 dark:text-gray-500'}`} />
-                        </div>
-                        <div className={`text-xs font-semibold truncate w-full ${isUnlocked ? colors.text : 'text-gray-400 dark:text-gray-500'}`}>
+                      {/* Badge Name Below */}
+                      <div className="mt-1.5 text-center px-1">
+                        <div className={`text-[10px] sm:text-xs font-semibold leading-tight ${
+                          isUnlocked ? colors.text : 'text-gray-400 dark:text-gray-500'
+                        }`}>
                           {achievement.name}
-                        </div>
-                        <div className={`text-[10px] mt-0.5 ${isUnlocked ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'}`}>
-                          {achievement.tier.charAt(0).toUpperCase() + achievement.tier.slice(1)}
                         </div>
                       </div>
                       
-                      {/* Tooltip */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-white dark:bg-gray-900 rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 border border-gray-200 dark:border-gray-700 shadow-lg">
-                        <div className={`font-bold ${colors.text}`}>{achievement.name}</div>
-                        <div className="text-gray-500 dark:text-gray-400">{achievement.description}</div>
+                      {/* Hover Tooltip - Smart positioning */}
+                      <div className={`absolute top-full mt-2 w-44 px-3 py-2.5 bg-white dark:bg-gray-800 rounded-lg text-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[100] border border-gray-200 dark:border-gray-600 shadow-2xl backdrop-blur-0 ${
+                        isLeftEdge ? 'left-0' : isRightEdge ? 'right-0' : 'left-1/2 -translate-x-1/2'
+                      }`} style={{ backgroundColor: 'rgb(255, 255, 255)' }}>
+                        {/* Arrow */}
+                        <div className={`absolute -top-1.5 w-3 h-3 bg-white dark:bg-gray-800 border-l border-t border-gray-200 dark:border-gray-600 rotate-45 ${
+                          isLeftEdge ? 'left-4' : isRightEdge ? 'right-4' : 'left-1/2 -translate-x-1/2'
+                        }`} style={{ backgroundColor: 'rgb(255, 255, 255)' }} />
+                        
+                        <div className="relative">
+                          <div className={`font-bold text-xs mb-0.5 ${colors.text}`}>{achievement.name}</div>
+                          <div className="text-gray-500 dark:text-gray-400 text-[11px] leading-snug">
+                            {achievement.description}
+                          </div>
+                          <div className="flex items-center justify-between mt-2">
+                            <div className={`text-[9px] px-1.5 py-0.5 rounded ${colors.ribbon} text-white font-medium`}>
+                              {achievement.tier.toUpperCase()}
+                            </div>
+                            {isUnlocked && (
+                              <div className="flex items-center gap-1">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const text = `I just unlocked the "${achievement.name}" badge on CodeRipper! 🏆`;
+                                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.origin)}`, '_blank');
+                                  }}
+                                  className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded transition-colors"
+                                  title="Share on X"
+                                >
+                                  <Twitter className="w-3 h-3 text-blue-400" />
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const text = `I just unlocked the "${achievement.name}" badge on CodeRipper!`;
+                                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin)}&title=${encodeURIComponent(text)}`, '_blank');
+                                  }}
+                                  className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded transition-colors"
+                                  title="Share on LinkedIn"
+                                >
+                                  <Linkedin className="w-3 h-3 text-blue-600" />
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const text = `I just unlocked the "${achievement.name}" badge on CodeRipper! 🏆`;
+                                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin)}&quote=${encodeURIComponent(text)}`, '_blank');
+                                  }}
+                                  className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded transition-colors"
+                                  title="Share on Facebook"
+                                >
+                                  <Facebook className="w-3 h-3 text-blue-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </motion.div>
                   );
