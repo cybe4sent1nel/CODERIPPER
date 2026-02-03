@@ -161,3 +161,19 @@ temp/
 .env.development
 .env.production
 *.local
+
+# =========================================
+# Documentation & Scripts (exclude from commits)
+# =========================================
+# All .md files except README.md
+*.md
+!README.md
+!**/README.md
+
+# All .txt files
+*.txt
+
+# Startup scripts (keep .js files)
+*.bat
+*.ps1
+*.sh
