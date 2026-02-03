@@ -12,6 +12,13 @@ export const GetStartedButton: React.FC<GetStartedButtonProps> = ({ onClick }) =
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('GetStartedButton clicked!');
+    onClick();
+  };
+
   return (
     <StyledWrapper $isDark={isDark}>
       <div>
@@ -21,10 +28,9 @@ export const GetStartedButton: React.FC<GetStartedButtonProps> = ({ onClick }) =
             <div className="light-2" />
             <div className="light-3" />
           </div>
-          <label className="area-wrapper">
+          <div className="area-wrapper" onClick={handleClick}>
             <div className="wrapper">
-              <input defaultChecked type="checkbox" onChange={() => {}} />
-              <button className="button" onClick={onClick} type="button">
+              <button className="button" type="button">
                 <div className="part-1">
                   <div className="case">
                     <div className="mask" />
@@ -127,7 +133,7 @@ export const GetStartedButton: React.FC<GetStartedButtonProps> = ({ onClick }) =
                 </div>
               </button>
             </div>
-          </label>
+          </div>
         </div>
         <div className="noise">
           <svg height="100%" width="100%">
@@ -211,20 +217,6 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
     transition: all 0.6s var(--ease-elastic);
     transform: translateY(-6px) scale(1.02);
 
-    input {
-      position: absolute;
-      background: transparent;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      inset: 0;
-      z-index: 10;
-      cursor: pointer;
-      pointer-events: all;
-      user-select: none;
-      outline: none;
-    }
-
     .button {
       background: transparent;
       display: flex;
@@ -232,6 +224,8 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
       padding: 0;
       margin: 0;
       cursor: pointer;
+      width: 100%;
+      pointer-events: all;
 
       &::before {
         content: "";
@@ -381,7 +375,7 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
       .part-2 {
         position: relative;
         height: var(--h);
-        width: 110px;
+        width: 145px;
         border-radius: var(--rounded-min) var(--rounded-max) var(--rounded-max)
           var(--rounded-min);
         display: flex;
@@ -460,13 +454,7 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
           transition: opacity 0.6s linear;
           opacity: 0;
           height: var(--h);
-          width: 110px;
-
-          path {
-            stroke-dashoffset: 430;
-            stroke-dasharray: 430 430;
-            animation: 1.4s path-glass ease infinite;
-          }
+          width: 145px;
         }
 
         @keyframes path-glass {
@@ -528,7 +516,7 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
     position: absolute;
     inset: 0;
   }
@@ -548,7 +536,7 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
   .text span::after {
     content: attr(data-label);
     position: absolute;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     left: 0;
     color: var(--text-color);
@@ -561,22 +549,39 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
     transform: translateY(-100%);
   }
 
-  .area-wrapper input:checked ~ .button .filament path {
+  /* Show state-1 text by default (Signup/Login) */
+  .area-wrapper .button .text.state-1 span::after {
+    opacity: 1;
+  }
+
+  /* Hide state-1 before pseudo element */
+  .area-wrapper .button .text.state-1 span::before {
+    opacity: 0;
+  }
+
+  /* Hide state-2 text by default (Join Now!) */
+  .area-wrapper .button .text.state-2 span::before,
+  .area-wrapper .button .text.state-2 span::after {
+    opacity: 0;
+  }
+  }
+
+  .area-wrapper .button .filament path {
     transition-delay: 0.6s;
   }
 
-  .area-wrapper:hover input:checked ~ .button .filament path {
+  .area-wrapper:hover .button .filament path {
     stroke-dasharray: 100 0;
   }
 
-  .area-wrapper input:checked ~ .button .part-1 .case {
+  .area-wrapper .button .part-1 .case {
     transform: translateX(0px);
     transition: all 1.25s var(--ease-elastic-2);
   }
 
-  .area-wrapper:hover input:checked ~ .button::before,
-  .area-wrapper:hover input:checked ~ .button::after,
-  .area-wrapper:hover input:checked ~ .button .path-glass {
+  .area-wrapper:hover .button::before,
+  .area-wrapper:hover .button::after,
+  .area-wrapper:hover .button .path-glass {
     opacity: 1;
   }
 
@@ -584,7 +589,7 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
     opacity: 0;
   }
 
-  .area-wrapper input:not(:checked) ~ .button .part-1 .line::before {
+  .area-wrapper .button .part-1 .line::before {
     box-shadow: 1px 0 10px 3px rgba(255, 220, 145, 0.4);
     background: rgb(140, 140, 140);
   }
@@ -593,31 +598,31 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
     animation: reflex 0.6s ease;
   }
 
-  .area-wrapper:hover .text span::before {
-    animation: char-in 1s ease calc(var(--i) * 0.03s) forwards;
+  /* On hover: hide state-1 (Signup/Login) completely */
+  .area-wrapper:hover .text.state-1 span::after {
+    opacity: 0 !important;
+    animation: char-out 0.3s ease forwards;
   }
 
-  .area-wrapper:hover .text span::after,
-  .area-wrapper input:not(:checked) ~ .button .text.state-1 span::before,
-  .area-wrapper input:not(:checked) ~ .button .text.state-1 span::after,
-  .area-wrapper input:checked ~ .button .text.state-2 span::before,
-  .area-wrapper input:checked ~ .button .text.state-2 span::after {
+  .area-wrapper:hover .text.state-1 span::before {
+    opacity: 0 !important;
+  }
+
+  /* On hover: show state-2 (Join Now!) */
+  .area-wrapper:hover .text.state-2 span::after {
+    opacity: 1 !important;
+    animation: char-in 0.5s ease calc(var(--i) * 0.03s) forwards;
+  }
+
+  .area-wrapper:hover .text.state-2 span::before {
     opacity: 0;
-    animation: char-out 1.3s ease calc(var(--i) * 0.04s) backwards;
   }
 
-  .area-wrapper input:not(:checked) ~ .button .part-1 .screw g {
-    animation: pulse 0.8s ease calc(var(--i) * 0.1s) backwards;
-  }
-  .area-wrapper input:checked ~ .button .part-1 .screw g {
+  .area-wrapper .button .part-1 .screw g {
     animation: pulse-out 0.8s ease calc((5 - var(--i)) * 0.2s) backwards;
   }
 
-  .area-wrapper input:not(:checked) ~ .button .part-1 .screw .dot {
-    animation: dot 0.7s ease calc(var(--i) * 0.15s) backwards;
-  }
-
-  .area-wrapper input:checked ~ .button .part-1 .screw .dot {
+  .area-wrapper .button .part-1 .screw .dot {
     animation: dot-out 0.7s ease calc((3 - var(--i)) * 0.15s) forwards;
   }
 
