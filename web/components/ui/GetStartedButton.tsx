@@ -99,25 +99,27 @@ export const GetStartedButton: React.FC<GetStartedButtonProps> = ({ onClick }) =
                     </svg>
                     <span className="content">
                       <span className="text state-1">
-                        <span data-label="G" style={{'--i': 1} as React.CSSProperties}>G</span>
-                        <span data-label="e" style={{'--i': 2} as React.CSSProperties}>e</span>
-                        <span data-label="t" style={{'--i': 3} as React.CSSProperties}>t</span>
-                        <span data-label="S" style={{'--i': 4} as React.CSSProperties}>S</span>
-                        <span data-label="t" style={{'--i': 5} as React.CSSProperties}>t</span>
-                        <span data-label="a" style={{'--i': 6} as React.CSSProperties}>a</span>
-                        <span data-label="r" style={{'--i': 7} as React.CSSProperties}>r</span>
-                        <span data-label="t" style={{'--i': 8} as React.CSSProperties}>t</span>
-                        <span data-label="e" style={{'--i': 9} as React.CSSProperties}>e</span>
-                        <span data-label="d" style={{'--i': 10} as React.CSSProperties}>d</span>
+                        <span data-label="S" style={{'--i': 1} as React.CSSProperties}>S</span>
+                        <span data-label="i" style={{'--i': 2} as React.CSSProperties}>i</span>
+                        <span data-label="g" style={{'--i': 3} as React.CSSProperties}>g</span>
+                        <span data-label="n" style={{'--i': 4} as React.CSSProperties}>n</span>
+                        <span data-label="u" style={{'--i': 5} as React.CSSProperties}>u</span>
+                        <span data-label="p" style={{'--i': 6} as React.CSSProperties}>p</span>
+                        <span data-label="/" style={{'--i': 7} as React.CSSProperties}>/</span>
+                        <span data-label="L" style={{'--i': 8} as React.CSSProperties}>L</span>
+                        <span data-label="o" style={{'--i': 9} as React.CSSProperties}>o</span>
+                        <span data-label="g" style={{'--i': 10} as React.CSSProperties}>g</span>
+                        <span data-label="i" style={{'--i': 11} as React.CSSProperties}>i</span>
+                        <span data-label="n" style={{'--i': 12} as React.CSSProperties}>n</span>
                       </span>
                       <span className="text state-2">
-                        <span data-label="L" style={{'--i': 1} as React.CSSProperties}>L</span>
-                        <span data-label="e" style={{'--i': 2} as React.CSSProperties}>e</span>
-                        <span data-label="t" style={{'--i': 3} as React.CSSProperties}>t</span>
-                        <span data-label="'" style={{'--i': 4} as React.CSSProperties}>&apos;</span>
-                        <span data-label="s" style={{'--i': 5} as React.CSSProperties}>s</span>
-                        <span data-label="G" style={{'--i': 6} as React.CSSProperties}>G</span>
-                        <span data-label="o" style={{'--i': 7} as React.CSSProperties}>o</span>
+                        <span data-label="J" style={{'--i': 1} as React.CSSProperties}>J</span>
+                        <span data-label="o" style={{'--i': 2} as React.CSSProperties}>o</span>
+                        <span data-label="i" style={{'--i': 3} as React.CSSProperties}>i</span>
+                        <span data-label="n" style={{'--i': 4} as React.CSSProperties}>n</span>
+                        <span data-label="N" style={{'--i': 5} as React.CSSProperties}>N</span>
+                        <span data-label="o" style={{'--i': 6} as React.CSSProperties}>o</span>
+                        <span data-label="w" style={{'--i': 7} as React.CSSProperties}>w</span>
                         <span data-label="!" style={{'--i': 8} as React.CSSProperties}>!</span>
                       </span>
                     </span>
