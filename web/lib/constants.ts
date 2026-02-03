@@ -4,6 +4,7 @@ export const LANGUAGES = {
     name: 'JavaScript',
     extension: 'js',
     monacoLanguage: 'javascript',
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - JavaScript Editor
 console.log("Hello, World!");
 
@@ -19,6 +20,7 @@ console.log(fibonacci(10));`,
     name: 'Python',
     extension: 'py',
     monacoLanguage: 'python',
+    hasLivePreview: false,
     defaultCode: `# Welcome to CodeRipper - Python Editor
 print("Hello, World!")
 
@@ -34,6 +36,7 @@ print(f"Fibonacci(10): {fibonacci(10)}")`,
     name: 'TypeScript',
     extension: 'ts',
     monacoLanguage: 'typescript',
+    hasLivePreview: true,
     defaultCode: `// Welcome to CodeRipper - TypeScript Editor
 interface User {
   name: string;
@@ -52,6 +55,7 @@ console.log(\`Hello, \${user.name}! You are \${user.age} years old.\`);`,
     name: 'Java',
     extension: 'java',
     monacoLanguage: 'java',
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - Java Editor
 public class Main {
     public static void main(String[] args) {
@@ -71,6 +75,7 @@ public class Main {
     name: 'C++',
     extension: 'cpp',
     monacoLanguage: 'cpp',
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - C++ Editor
 #include <iostream>
 using namespace std;
@@ -91,6 +96,7 @@ int main() {
     name: 'Go',
     extension: 'go',
     monacoLanguage: 'go',
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - Go Editor
 package main
 
@@ -113,6 +119,7 @@ func main() {
     name: 'Rust',
     extension: 'rs',
     monacoLanguage: 'rust',
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - Rust Editor
 fn fibonacci(n: u32) -> u32 {
     match n {
@@ -126,15 +133,13 @@ fn main() {
     println!("Hello, World!");
     println!("Fibonacci(10): {}", fibonacci(10));
 }`,
-    icon: `<svg class="svg-icon" style="width: 1em;height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-      <path d="M512 74.666667C270.933333 74.666667 74.666667 270.933333 74.666667 512S270.933333 949.333333 512 949.333333 949.333333 753.066667 949.333333 512 753.066667 74.666667 512 74.666667z m0 810.666666C307.2 885.333333 138.666667 716.8 138.666667 512S307.2 138.666667 512 138.666667 885.333333 307.2 885.333333 512 716.8 885.333333 512 885.333333z" fill="#FF7043"/>
-      <path d="M512 320c-106.039467 0-192 85.960533-192 192s85.960533 192 192 192 192-85.960533 192-192-85.960533-192-192-192z m0 320c-70.692267 0-128-57.307733-128-128s57.307733-128 128-128 128 57.307733 128 128-57.307733 128-128 128z" fill="#FF7043"/>
-    </svg>`
+    icon: `<svg viewBox="0 0 1024 1024" fill="#FF7043" xmlns="http://www.w3.org/2000/svg"><path d="M485.347556 186.360889a25.322667 25.322667 0 0 1 50.652444 0 25.322667 25.322667 0 0 1-50.652444 0M183.224889 415.658667a25.322667 25.322667 0 0 1 50.652444 0 25.322667 25.322667 0 0 1-50.652444 0m604.231111 1.180444a25.322667 25.322667 0 0 1 50.652444 0 25.322667 25.322667 0 0 1-50.652444 0m-530.922667 34.702222a23.125333 23.125333 0 0 0 11.740445-30.506666l-11.235556-25.415111h44.188445v199.182222H212.074667a311.800889 311.800889 0 0 1-10.097778-119.025778z m184.846223 4.892445V397.724444h105.230222c5.432889 0 38.378667 6.279111 38.378666 30.912 0 20.458667-25.265778 27.790222-46.044444 27.790223z m-143.665778 316.103111a25.322667 25.322667 0 0 1 50.652444 0 25.322667 25.322667 0 0 1-50.652444 0m375.246222 1.180444a25.322667 25.322667 0 0 1 50.652444 0 25.322667 25.322667 0 0 1-50.652444 0m7.829333-57.429333a23.082667 23.082667 0 0 0-27.420444 17.763556l-12.707556 59.320888a311.800889 311.800889 0 0 1-260.024889-1.244444l-12.707555-59.320889a23.082667 23.082667 0 0 0-27.406222-17.756444l-52.373334 11.242666a311.800889 311.800889 0 0 1-27.079111-31.914666h254.819556c2.887111 0 4.807111-0.526222 4.807111-3.150223V601.088c0-2.624-1.92-3.143111-4.807111-3.143111h-74.524445v-57.137778h80.604445c7.36 0 39.338667 2.104889 49.564444 42.986667 3.2 12.572444 10.24 53.468444 15.047111 66.56 4.792889 14.684444 24.298667 44.017778 45.084445 44.017778h131.562666a311.800889 311.800889 0 0 1-28.871111 33.422222z m141.496889-237.994667a311.800889 311.800889 0 0 1 0.661334 54.129778h-31.992889c-3.2 0-4.487111 2.104889-4.487111 5.240889v14.691556c0 34.581333-19.498667 42.097778-36.586667 44.017777-16.270222 1.834667-34.311111-6.812444-36.536889-16.768-9.6-53.994667-25.6-65.521778-50.858667-85.447111 31.352889-19.911111 63.971556-49.28 63.971556-88.583111 0-42.453333-29.098667-69.184-48.931556-82.289778-27.832889-18.346667-58.638222-22.016-66.951111-22.016H279.722667A311.800889 311.800889 0 0 1 454.165333 202.808889l38.997334 40.910222a23.061333 23.061333 0 0 0 32.64 0.746667l43.640889-41.735111a311.800889 311.800889 0 0 1 213.454222 152.035555l-29.873778 67.463111a23.153778 23.153778 0 0 0 11.747556 30.506667z m74.503111 1.095111l-1.016889-10.432 30.769778-28.700444c6.257778-5.831111 3.911111-17.578667-4.081778-20.558222l-39.338666-14.705778-3.079111-10.154667 24.533333-34.076444c5.006222-6.926222 0.412444-17.991111-8.014222-19.370667l-41.479111-6.748444-4.977778-9.315556 17.422222-38.257778c3.569778-7.786667-3.057778-17.749333-11.633778-17.422222l-42.097777 1.464889-6.648889-8.071111 9.671111-41.002667c1.955556-8.32-6.492444-16.782222-14.819556-14.826666l-40.995555 9.664-8.078223-6.648889 1.472-42.097778c0.327111-8.519111-9.649778-15.182222-17.422222-11.640889l-38.250666 17.436445-9.315556-4.999112-6.755556-41.479111c-1.372444-8.412444-12.444444-13.013333-19.363555-8.021333l-34.104889 24.533333-10.133333-3.072-14.705778-39.338666c-2.986667-8.014222-14.734222-10.325333-20.551111-4.096l-28.700445 30.791111-10.432-1.016889-22.165333-35.811556c-4.48-7.253333-16.483556-7.253333-20.949333 0l-22.165334 35.811556-10.432 1.016889-28.707555-30.791111c-5.824-6.229333-17.564444-3.918222-20.551111 4.096l-14.712889 39.338666-10.140445 3.072-34.097777-24.533333c-6.926222-4.999111-17.991111-0.391111-19.363556 8.021333l-6.762667 41.479111-9.315555 4.999112-38.250667-17.436445c-7.772444-3.555556-17.749333 3.121778-17.422222 11.640889l1.464889 42.097778-8.078222 6.648889-40.995556-9.671111c-8.327111-1.934222-16.782222 6.506667-14.833778 14.833777l9.656889 41.002667-6.634667 8.071111-42.097777-1.464889c-8.483556-0.248889-15.175111 9.635556-11.640889 17.422222l17.443555 38.257778-4.999111 9.315556-41.472 6.748444c-8.426667 1.365333-12.992 12.444444-8.021333 19.370667l24.533333 34.076444-3.079111 10.154667-39.338667 14.705778c-7.985778 2.986667-10.325333 14.72-4.081777 20.558222l30.776889 28.700444-1.016889 10.432-35.804445 22.158223c-7.253333 4.48-7.253333 16.483556 0 20.949333l35.804445 22.165333 1.016889 10.432-30.776889 28.707556c-6.243556 5.816889-3.904 17.550222 4.081777 20.551111l39.338667 14.705778 3.079111 10.154666-24.533333 34.083556c-4.984889 6.940444-0.398222 18.005333 8.028444 19.363556l41.464889 6.741333 4.999111 9.329778-17.443555 38.243555c-3.555556 7.772444 3.157333 17.777778 11.648 17.429334l42.076444-1.472 6.648889 8.078222-9.656889 41.016889c-1.955556 8.305778 6.506667 16.746667 14.833778 14.791111l40.995556-9.649778 8.085333 6.627556-1.472 42.104888c-0.327111 8.526222 9.649778 15.189333 17.422222 11.633778l38.250667-17.422222 9.315555 4.992 6.755556 41.457778c1.372444 8.440889 12.444444 13.006222 19.377778 8.035555l34.076444-24.554666 10.147556 3.093333 14.712889 39.324444c2.986667 7.985778 14.734222 10.339556 20.551111 4.081778l28.707555-30.776889 10.432 1.038223 22.165334 35.804444c4.465778 7.224889 16.469333 7.239111 20.949333 0l22.165333-35.804444 10.432-1.038223 28.700445 30.776889c5.816889 6.257778 17.564444 3.904 20.551111-4.081778l14.705778-39.324444 10.154666-3.093333 34.083556 24.554666c6.926222 4.970667 17.991111 0.391111 19.356444-8.035555l6.769778-41.457778 9.315556-4.999111 38.243555 17.429333c7.772444 3.555556 17.728-3.093333 17.422222-11.633778l-1.464889-42.097777 8.071112-6.634667 40.995555 9.649778c8.327111 1.955556 16.782222-6.485333 14.826667-14.791111l-9.656889-41.016889 6.627555-8.078222 42.097778 1.472c8.490667 0.341333 15.203556-9.656889 11.633778-17.429334l-17.422222-38.243555 4.977778-9.329778 41.479111-6.741333c8.440889-1.351111 13.020444-12.423111 8.014222-19.363556l-24.533333-34.083556 3.079111-10.154666 39.338666-14.705778c8-3.000889 10.339556-14.734222 4.081778-20.551111l-30.769778-28.707556 1.016889-10.432 35.804445-22.165333c7.253333-4.465778 7.260444-16.462222 0.007111-20.949333z" /></svg>`
   },
   kotlin: {
     name: 'Kotlin',
     extension: 'kt',
     monacoLanguage: 'kotlin',
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - Kotlin Editor
 fun main() {
     println("Hello, World!")
@@ -167,6 +172,7 @@ fun fibonacci(n: Int): Int {
     name: 'Solidity',
     extension: 'sol',
     monacoLanguage: 'solidity',
+    hasLivePreview: false,
     defaultCode: `// SPDX-License-Identifier: MIT
 // Welcome to CodeRipper - Solidity Editor
 pragma solidity ^0.8.0;
@@ -203,6 +209,7 @@ contract HelloWorld {
     name: 'Move',
     extension: 'move',
     monacoLanguage: 'rust', // Use Rust syntax highlighting as fallback
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - Move Editor
 module hello_world::hello {
     use std::debug;
@@ -234,6 +241,7 @@ module hello_world::hello {
     name: 'Cairo',
     extension: 'cairo',
     monacoLanguage: 'rust', // Use Rust syntax highlighting as fallback
+    hasLivePreview: false,
     defaultCode: `// Welcome to CodeRipper - Cairo Editor
 use debug::PrintTrait;
 
@@ -270,6 +278,7 @@ mod tests {
     name: 'Vyper',
     extension: 'vy',
     monacoLanguage: 'python', // Use Python syntax highlighting
+    hasLivePreview: false,
     defaultCode: `# @version ^0.3.0
 # Welcome to CodeRipper - Vyper Editor
 
@@ -311,7 +320,428 @@ def getCounter() -> uint256:
       <path d="M12 2L2 7v10l10 5 10-5V7l-10-5z"/>
       <path d="M12 8v8m-4-6l4-2 4 2-4 2-4-2z" stroke="white" stroke-width="1" fill="none"/>
     </svg>`
+  },
+  html: {
+    name: 'HTML',
+    extension: 'html',
+    monacoLanguage: 'html',
+    hasLivePreview: true,
+    defaultCode: `<!DOCTYPE html>
+<!-- Welcome to CodeRipper - HTML Editor with Live Preview -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRipper - HTML Preview</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Welcome to CodeRipper!</h1>
+        <p>Create amazing web pages with live preview!</p>
+        <button onclick="alert('Hello from CodeRipper!')">Click Me</button>
+    </div>
+</body>
+</html>`,
+    icon: `<svg viewBox="0 0 24 24" fill="#E34F26"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>`
+  },
+  css: {
+    name: 'CSS',
+    extension: 'css',
+    monacoLanguage: 'css',
+    hasLivePreview: true,
+    defaultCode: `/* Welcome to CodeRipper - CSS Editor with Live Preview */
+
+/* Modern Gradient Background */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Animated Card */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stylish Heading */
+h1 {
+    color: white;
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-size: 2.5em;
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Button with Hover Effect */
+.button {
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}`,
+    icon: `<svg viewBox="0 0 24 24" fill="#1572B6"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>`
+  },
+  react: {
+    name: 'React',
+    extension: 'jsx',
+    monacoLanguage: 'javascript',
+    hasLivePreview: true,
+    defaultCode: `// Welcome to CodeRipper - React Editor with Live Preview
+import React, { useState } from 'react';
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [color, setColor] = useState('#667eea');
+
+  const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe'];
+
+  const changeColor = () => {
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    setColor(randomColor);
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: \`linear-gradient(135deg, \${color} 0%, #764ba2 100%)\`,
+      color: 'white',
+      fontFamily: 'system-ui, sans-serif',
+      transition: 'all 0.5s ease'
+    }}>
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)',
+        padding: '40px',
+        borderRadius: '20px',
+        textAlign: 'center'
+      }}>
+        <h1 style={{ fontSize: '3em', margin: '0 0 20px 0' }}>
+          🚀 CodeRipper React
+        </h1>
+        <p style={{ fontSize: '1.2em', marginBottom: '30px' }}>
+          Build amazing React components!
+        </p>
+        
+        <div style={{ fontSize: '4em', margin: '20px 0' }}>
+          {count}
+        </div>
+        
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <button 
+            onClick={() => setCount(count + 1)}
+            style={{
+              padding: '15px 30px',
+              fontSize: '16px',
+              background: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            Increment
+          </button>
+          
+          <button 
+            onClick={changeColor}
+            style={{
+              padding: '15px 30px',
+              fontSize: '16px',
+              background: '#FF6B6B',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            Change Color
+          </button>
+          
+          <button 
+            onClick={() => setCount(0)}
+            style={{
+              padding: '15px 30px',
+              fontSize: '16px',
+              background: '#666',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;`,
+    icon: `<svg viewBox="0 0 24 24" fill="#61DAFB"><circle cx="12" cy="12" r="2"/><path d="M12 2c2.5 0 5 1 7 2.5 2 1.5 3 3.5 3 5.5s-1 4-3 5.5c-2 1.5-4.5 2.5-7 2.5s-5-1-7-2.5c-2-1.5-3-3.5-3-5.5s1-4 3-5.5c2-1.5 4.5-2.5 7-2.5zm0 18c-2.5 0-5-1-7-2.5-2-1.5-3-3.5-3-5.5s1-4 3-5.5c2-1.5 4.5-2.5 7-2.5m0 0c2.5 0 5 1 7 2.5 2 1.5 3 3.5 3 5.5s-1 4-3 5.5c-2 1.5-4.5 2.5-7 2.5" stroke="#61DAFB" stroke-width="1" fill="none"/></svg>`
+  },
+  vue: {
+    name: 'Vue',
+    extension: 'vue',
+    monacoLanguage: 'html',
+    hasLivePreview: true,
+    defaultCode: `<!-- Welcome to CodeRipper - Vue Editor with Live Preview -->
+<template>
+  <div class="container">
+    <div class="card">
+      <h1>{{ title }}</h1>
+      <p>{{ message }}</p>
+      
+      <div class="counter">
+        <h2>Count: {{ count }}</h2>
+        <div class="buttons">
+          <button @click="increment" class="btn btn-primary">+</button>
+          <button @click="decrement" class="btn btn-secondary">-</button>
+          <button @click="reset" class="btn btn-danger">Reset</button>
+        </div>
+      </div>
+      
+      <div class="items">
+        <h3>Todo List:</h3>
+        <ul>
+          <li v-for="item in items" :key="item.id">
+            {{ item.text }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      title: '🎨 CodeRipper Vue',
+      message: 'Build reactive applications!',
+      count: 0,
+      items: [
+        { id: 1, text: 'Learn Vue.js' },
+        { id: 2, text: 'Build amazing apps' },
+        { id: 3, text: 'Deploy to production' }
+      ]
+    }
+  },
+  methods: {
+    increment() {
+      this.count++
+    },
+    decrement() {
+      this.count--
+    },
+    reset() {
+      this.count = 0
+    }
   }
+}
+</script>
+
+<style scoped>
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #42b883 0%, #35495e 100%);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3em;
+  margin: 0 0 10px 0;
+}
+
+.counter {
+  margin: 30px 0;
+}
+
+.counter h2 {
+  font-size: 2.5em;
+  margin: 20px 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+}
+
+.btn-primary {
+  background: #4CAF50;
+}
+
+.btn-secondary {
+  background: #2196F3;
+}
+
+.btn-danger {
+  background: #f44336;
+}
+
+.items ul {
+  list-style: none;
+  padding: 0;
+}
+
+.items li {
+  background: rgba(255, 255, 255, 0.2);
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+</style>`,
+    icon: `<svg viewBox="0 0 24 24" fill="#42b883"><path d="M2 3h3.5L12 15l6.5-12H22L12 21 2 3zm4.5 0h3L12 7.58 14.5 3h3L12 13.08 6.5 3z"/></svg>`
+  },
+  svg: {
+    name: 'SVG',
+    extension: 'svg',
+    monacoLanguage: 'xml',
+    hasLivePreview: true,
+    defaultCode: `<!-- Welcome to CodeRipper - SVG Editor with Live Preview -->
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="gradient2">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4ECDC4;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#gradient1)" />
+  
+  <!-- Animated Circle -->
+  <circle cx="200" cy="200" r="80" fill="url(#gradient2)">
+    <animate attributeName="r" from="80" to="90" dur="1s" repeatCount="indefinite" direction="alternate" />
+  </circle>
+  
+  <!-- Star Shape -->
+  <polygon points="200,80 220,140 280,140 235,175 255,235 200,200 145,235 165,175 120,140 180,140" 
+           fill="#FFD700" opacity="0.8">
+    <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" 
+                      dur="10s" repeatCount="indefinite"/>
+  </polygon>
+  
+  <!-- Text -->
+  <text x="200" y="320" font-family="Arial, sans-serif" font-size="24" font-weight="bold" 
+        text-anchor="middle" fill="white">
+    CodeRipper SVG
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </text>
+  
+  <!-- Small Circles -->
+  <circle cx="100" cy="100" r="20" fill="#FF6B6B" opacity="0.7">
+    <animate attributeName="cy" from="100" to="120" dur="1.5s" repeatCount="indefinite" direction="alternate"/>
+  </circle>
+  
+  <circle cx="300" cy="100" r="20" fill="#4ECDC4" opacity="0.7">
+    <animate attributeName="cy" from="100" to="120" dur="1.5s" repeatCount="indefinite" direction="alternate"/>
+  </circle>
+</svg>`,
+    icon: `<svg viewBox="0 0 24 24" fill="#FFB13B"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`
+  },
 } as const;
 
 export type LanguageKey = keyof typeof LANGUAGES;

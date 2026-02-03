@@ -290,12 +290,6 @@ export default function EnterpriseHeader({
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setShowAuthModal(true)}
-                    className="px-4 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                  >
-                    Sign In
-                  </button>
                   <GetStartedButton onClick={() => setShowAuthModal(true)} />
                 </div>
               )}

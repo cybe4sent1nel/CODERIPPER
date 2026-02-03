@@ -11,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useSnippets } from '@/contexts/SnippetContext'
 import SaveSnippetModal from '@/components/SaveSnippetModal'
 import ShareSnippetModal from '@/components/ShareSnippetModal'
-import AdBanner, { InterstitialAd } from '@/components/AdBanner'
+import AdBanner from '@/components/AdBanner'
 import toast from 'react-hot-toast'
 
 const Editor = dynamic(() => import('../components/Editor'), { ssr: false })
@@ -21,7 +21,6 @@ export default function EditorPage() {
   const [code, setCode] = useState('')
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
-  const [showInterstitial, setShowInterstitial] = useState(false)
   const editorRef = useRef<any>(null)
   
   const { user, isAuthenticated, incrementUsage, checkUsageLimit } = useAuth()
@@ -51,11 +50,6 @@ export default function EditorPage() {
         return
       }
       incrementUsage('execution')
-      
-      // Show interstitial ad every 5 runs for free users
-      if (user.executionsToday > 0 && user.executionsToday % 5 === 0) {
-        setShowInterstitial(true)
-      }
     }
     // The actual run is handled by the Editor component
   }, [user, checkUsageLimit, incrementUsage])
@@ -130,10 +124,14 @@ export default function EditorPage() {
           onLoadSnippet={handleLoadSnippet}
         />
         
-        {/* Top Ad Banner for free users */}
+        {/* Top Ad Banner for free users - Editor has substantial interactive content */}
         {user && !user.isPremium && (
           <div className="container mx-auto px-4 py-2">
-            <AdBanner placement="top" isPremium={user?.isPremium} />
+            <AdBanner 
+              placement="top" 
+              isPremium={user?.isPremium} 
+              hasSubstantialContent={true} 
+            />
           </div>
         )}
         
@@ -146,11 +144,30 @@ export default function EditorPage() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">
-                  {currentSnippet ? currentSnippet.title : 'AI-Powered Code Editor'}
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                  <motion.span
+                    className="inline-block"
+                    style={{
+                      backgroundImage: 'linear-gradient(to right, #42d392, #f9d423, #3a7bd5, #ff914d, #42d392)',
+                      backgroundSize: '300% 100%',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    } as any}
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{
+                      duration: 5,
+                      ease: 'linear',
+                      repeat: Infinity,
+                      repeatType: 'loop'
+                    }}
+                  >
+                    {currentSnippet ? currentSnippet.title : 'AI-Powered Code Editor'}
+                  </motion.span>
                 </h1>
-                <p className="text-muted-foreground text-sm md:text-base">
-                  {currentSnippet 
+                <p className="text-muted-foreground text-sm md:text-base">{currentSnippet 
                     ? currentSnippet.description || 'Edit your snippet'
                     : 'Write, compile, and optimize your code with intelligent AI assistance across 15+ programming languages.'}
                 </p>
@@ -310,12 +327,6 @@ export default function EditorPage() {
           code: code,
           language: language,
         }}
-      />
-      
-      <InterstitialAd
-        isOpen={showInterstitial}
-        onClose={() => setShowInterstitial(false)}
-        isPremium={user?.isPremium}
       />
     </>
   )

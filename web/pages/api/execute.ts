@@ -349,6 +349,37 @@ const LANGUAGE_CONFIGS: Record<string, {
     pistonLang: 'nasm64',
     pistonVersion: '2.15.5',
     mainFileName: 'main.asm'
+  },
+  // Client-side languages (use LivePreview component instead of server execution)
+  html: {
+    dockerImage: 'node:20-slim', // Not used, client-side only
+    fileExtension: 'html',
+    command: (f) => ['echo', 'HTML is rendered in the browser via LivePreview'],
+    mainFileName: 'index.html'
+  },
+  css: {
+    dockerImage: 'node:20-slim', // Not used, client-side only
+    fileExtension: 'css',
+    command: (f) => ['echo', 'CSS is rendered in the browser via LivePreview'],
+    mainFileName: 'styles.css'
+  },
+  react: {
+    dockerImage: 'node:20-slim', // Not used, client-side only
+    fileExtension: 'jsx',
+    command: (f) => ['echo', 'React is rendered in the browser via LivePreview'],
+    mainFileName: 'App.jsx'
+  },
+  vue: {
+    dockerImage: 'node:20-slim', // Not used, client-side only
+    fileExtension: 'vue',
+    command: (f) => ['echo', 'Vue is rendered in the browser via LivePreview'],
+    mainFileName: 'App.vue'
+  },
+  svg: {
+    dockerImage: 'node:20-slim', // Not used, client-side only
+    fileExtension: 'svg',
+    command: (f) => ['echo', 'SVG is rendered in the browser via LivePreview'],
+    mainFileName: 'image.svg'
   }
 }
 
@@ -499,6 +530,33 @@ export default async function handler(
         error: `❌ Unsupported language: ${language}\n\n💡 Supported languages: ${Object.keys(LANGUAGE_CONFIGS).join(', ')}`,
         errorType: 'UnsupportedLanguage',
         suggestion: `Choose one of the supported languages: ${Object.keys(LANGUAGE_CONFIGS).join(', ')}`
+      })
+    }
+
+    // Handle client-side languages (HTML, CSS, React, Vue, SVG)
+    const clientSideLanguages = ['html', 'css', 'react', 'vue', 'svg']
+    if (clientSideLanguages.includes(language)) {
+      const languageNames: Record<string, string> = {
+        html: 'HTML',
+        css: 'CSS',
+        react: 'React/JSX',
+        vue: 'Vue',
+        svg: 'SVG'
+      }
+      
+      return res.status(200).json({
+        success: true,
+        output: `✨ ${languageNames[language]} Code Preview\n\n` +
+                `Your ${languageNames[language]} code is rendered in the Live Preview panel!\n\n` +
+                `💡 Look for the "Live Preview" button or panel to see your ${languageNames[language]} in action.\n\n` +
+                `📝 Features:\n` +
+                `  • Real-time rendering\n` +
+                `  • Fullscreen mode\n` +
+                `  • Error handling\n` +
+                `  • Instant updates\n\n` +
+                `🎨 ${languageNames[language]} is a client-side language and runs directly in your browser!`,
+        executionTime: Date.now() - startTime,
+        exitCode: 0
       })
     }
 

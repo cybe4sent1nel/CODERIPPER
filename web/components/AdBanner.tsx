@@ -7,11 +7,22 @@ import { Rocket, Cloud, Zap, X, Check, Ban, Sparkles, Bot } from 'lucide-react';
 interface AdBannerProps {
   placement: 'top' | 'sidebar' | 'inline' | 'footer';
   isPremium?: boolean;
+  /** 
+   * Indicates if the page has substantial publisher content.
+   * Required by AdSense policy - ads should not be shown on:
+   * - Pages without content or with low value content
+   * - Pages under construction  
+   * - Pages used for alerts, navigation or other behavioral purposes
+   */
+  hasSubstantialContent?: boolean;
 }
 
-export default function AdBanner({ placement, isPremium = false }: AdBannerProps) {
+export default function AdBanner({ placement, isPremium = false, hasSubstantialContent = true }: AdBannerProps) {
   // Don't show ads to premium users
   if (isPremium) return null;
+  
+  // AdSense Policy: Don't show ads on pages without substantial content
+  if (!hasSubstantialContent) return null;
 
   const sizes = {
     top: 'h-[90px] w-full max-w-[728px]',
@@ -97,107 +108,10 @@ export default function AdBanner({ placement, isPremium = false }: AdBannerProps
   );
 }
 
-// Interstitial Ad Component
-export function InterstitialAd({ 
-  isOpen, 
-  onClose, 
-  isPremium = false 
-}: { 
-  isOpen: boolean; 
-  onClose: () => void;
-  isPremium?: boolean;
-}) {
-  const [countdown, setCountdown] = React.useState(5);
-
-  React.useEffect(() => {
-    if (!isOpen || isPremium) return;
-    
-    const timer = setInterval(() => {
-      setCountdown(prev => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isOpen, isPremium]);
-
-  React.useEffect(() => {
-    if (!isOpen) {
-      setCountdown(5);
-    }
-  }, [isOpen]);
-
-  if (!isOpen || isPremium) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-    >
-      <motion.div
-        initial={{ scale: 0.9 }}
-        animate={{ scale: 1 }}
-        className="relative w-full max-w-lg rounded-2xl bg-card border border-border overflow-hidden"
-      >
-        {/* Close button / countdown */}
-        <div className="absolute top-4 right-4 z-10">
-          {countdown > 0 ? (
-            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-foreground font-bold">
-              {countdown}
-            </div>
-          ) : (
-            <button
-              onClick={onClose}
-              className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
-        </div>
-
-        {/* Ad content */}
-        <div className="p-8 text-center">
-          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center mb-6">
-            <Zap className="w-10 h-10 text-white" />
-          </div>
-          
-          <h2 className="text-2xl font-bold text-foreground mb-2">
-            Unlock Your Full Potential
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Upgrade to CodeRipper Pro for unlimited executions, no ads, and premium AI features.
-          </p>
-
-          <div className="space-y-3">
-            <button className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-semibold hover:from-violet-500 hover:to-blue-500 transition-all shadow-lg">
-              Upgrade to Pro - $9.99/mo
-            </button>
-            <button 
-              onClick={countdown === 0 ? onClose : undefined}
-              className={`w-full py-3 px-6 rounded-xl border border-border text-muted-foreground ${
-                countdown === 0 ? 'hover:bg-muted cursor-pointer' : 'opacity-50 cursor-not-allowed'
-              } transition-all`}
-            >
-              {countdown > 0 ? `Skip in ${countdown}s` : 'Continue with Free'}
-            </button>
-          </div>
-
-          {/* Features preview */}
-          <div className="mt-6 pt-6 border-t border-border">
-            <div className="flex justify-center gap-6 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1"><Ban className="w-4 h-4" /> No Ads</span>
-              <span className="flex items-center gap-1"><Sparkles className="w-4 h-4" /> Unlimited Runs</span>
-              <span className="flex items-center gap-1"><Bot className="w-4 h-4" /> AI Assistant</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
+/**
+ * REMOVED: InterstitialAd component
+ * Reason: Violates AdSense policy - ads cannot be shown on screens used for 
+ * navigation or other behavioral purposes (e.g., after code execution)
+ * 
+ * Alternative: Use inline upgrade prompts or banners on content-rich pages instead
+ */

@@ -6,6 +6,13 @@ import { useTheme } from 'next-themes'
 import toast from 'react-hot-toast'
 import { v4 as uuidv4 } from 'uuid'
 
+// Extend Window interface for Monaco
+declare global {
+  interface Window {
+    monaco?: any;
+  }
+}
+
 import { 
   SparklesIcon,
   ShareIcon,
@@ -40,6 +47,9 @@ import LanguageSelector from './LanguageSelector'
 import { CodeComparison } from './CodeComparison'
 import TerminalLoader from './ui/TerminalLoader'
 import ViralFeatures from './ViralFeatures'
+import LivePreview from './LivePreview'
+import CommandPalette from './CommandPalette'
+import { detectLanguage, getLanguageConfidence, suggestLanguages } from '@/lib/languageDetector'
 
 interface EditorProps {
   language: LanguageKey
@@ -78,6 +88,14 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
   const [wordWrap, setWordWrap] = useState<'off' | 'on'>('off')
   const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
 
+  // Command Palette
+  const [showCommandPalette, setShowCommandPalette] = useState(false)
+  
+  // Auto-detection
+  const [autoDetectEnabled, setAutoDetectEnabled] = useState(true)
+  const [detectedLanguage, setDetectedLanguage] = useState<LanguageKey | null>(null)
+  const [detectionConfidence, setDetectionConfidence] = useState(0)
+
   // Monaco editor theme
   const [editorTheme, setEditorTheme] = useState('vs')
   
@@ -86,10 +104,55 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
     setEditorTheme(isDark ? 'vs-dark' : 'vs')
   }, [theme])
 
+  // Load auto-detection setting from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('autoDetectEnabled')
+    if (saved !== null) {
+      setAutoDetectEnabled(saved === 'true')
+    }
+  }, [])
+
+  // Auto-detect language on paste
+  useEffect(() => {
+    if (!autoDetectEnabled) return
+
+    const handlePaste = (e: ClipboardEvent) => {
+      const pastedText = e.clipboardData?.getData('text')
+      if (pastedText && pastedText.length > 30) {
+        // Delay detection to let the editor update
+        setTimeout(() => {
+          const detected = detectLanguage(code + pastedText)
+          if (detected && detected !== language) {
+            const confidence = getLanguageConfidence(code + pastedText, detected)
+            if (confidence > 70) {
+              setDetectedLanguage(detected)
+              setDetectionConfidence(confidence)
+              toast.success(`Detected ${LANGUAGES[detected].name} from pasted code (${confidence.toFixed(0)}% confident)`, {
+                duration: 4000,
+                icon: '📋'
+              })
+            }
+          }
+        }, 100)
+      }
+    }
+
+    document.addEventListener('paste', handlePaste)
+    return () => document.removeEventListener('paste', handlePaste)
+  }, [code, language, autoDetectEnabled])
+
   // Update code when language changes
   useEffect(() => {
     setCode(LANGUAGES[language].defaultCode)
     setHasUnsavedChanges(false)
+    
+    // Update Monaco model language when language changes
+    if (editorRef.current) {
+      const model = editorRef.current.getModel()
+      if (model && window.monaco) {
+        window.monaco.editor.setModelLanguage(model, LANGUAGES[language].monacoLanguage)
+      }
+    }
   }, [language])
 
   // Auto-detect if code needs input and count expected inputs
@@ -344,8 +407,19 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
   const handleEditorDidMount = useCallback((editor: any, monaco: any) => {
     editorRef.current = editor
     
+    // Make Monaco globally available for language updates
+    if (typeof window !== 'undefined') {
+      (window as any).monaco = monaco
+    }
+    
     // Configure Monaco for enhanced intellisense
     configureMonacoIntellisense(monaco)
+    
+    // Set the model language correctly for TypeScript
+    const model = editor.getModel()
+    if (model) {
+      monaco.editor.setModelLanguage(model, LANGUAGES[language].monacoLanguage)
+    }
     
     // Track cursor position
     editor.onDidChangeCursorPosition((e: any) => {
@@ -363,7 +437,7 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyS, () => {
       shareCode()
     })
-  }, [runCode, shareCode])
+  }, [runCode, shareCode, language])
 
   // Configure Monaco for full intellisense support
   const configureMonacoIntellisense = (monaco: any) => {
@@ -390,15 +464,17 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
       checkJs: true,
     })
 
-    // Enable validation
+    // Enable validation but be lenient for playground environment
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: false,
       noSyntaxValidation: false,
+      diagnosticCodesToIgnore: [1308, 1375, 1378, 2304, 2552, 2580, 2791, 6133, 7027, 7044, 8010] // Ignore common playground errors
     })
 
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: false,
       noSyntaxValidation: false,
+      diagnosticCodesToIgnore: [8010] // Ignore type annotation errors in JS
     })
 
     // Add extra libraries for better completions
@@ -820,8 +896,25 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
     if (value !== undefined) {
       setCode(value)
       setHasUnsavedChanges(true)
+      
+      // Auto-detect language if enabled and code changed significantly
+      if (autoDetectEnabled && value.length > 50) {
+        const detected = detectLanguage(value)
+        const confidence = getLanguageConfidence(value, detected)
+        
+        if (detected !== language && confidence > 60) {
+          setDetectedLanguage(detected)
+          setDetectionConfidence(confidence)
+          toast.success(`Detected ${LANGUAGES[detected].name} (${confidence.toFixed(0)}% confident)`, {
+            duration: 3000,
+            icon: '🔍'
+          })
+        } else {
+          setDetectedLanguage(null)
+        }
+      }
     }
-  }, [])
+  }, [language, autoDetectEnabled])
 
   const downloadCodeFile = () => {
     downloadCode(code, language, `my-code-${codeId}`)
@@ -1003,6 +1096,28 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
       setIsAiLoading(false)
     }
   }
+  
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Command Palette
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        setShowCommandPalette(prev => !prev)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  const handleApplyDetectedLanguage = () => {
+    if (detectedLanguage) {
+      onLanguageChange(detectedLanguage)
+      setDetectedLanguage(null)
+      toast.success(`Switched to ${LANGUAGES[detectedLanguage].name}`)
+    }
+  }
 
   return (
     <motion.div 
@@ -1010,6 +1125,49 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
       animate={{ opacity: 1, y: 0 }}
       className="grid grid-cols-1 xl:grid-cols-3 gap-6 min-h-[80vh]"
     >
+      {/* Language Auto-Detection Banner */}
+      <AnimatePresence>
+        {detectedLanguage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="xl:col-span-3 bg-gradient-to-r from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 border border-violet-300 dark:border-violet-700 rounded-lg p-4"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <SparklesIcon className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+                <div>
+                  <p className="font-semibold text-violet-900 dark:text-violet-100">
+                    Detected {LANGUAGES[detectedLanguage].name}
+                  </p>
+                  <p className="text-sm text-violet-700 dark:text-violet-300">
+                    {detectionConfidence.toFixed(0)}% confidence — Switch language for better features
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleApplyDetectedLanguage}
+                  className="bg-violet-600 hover:bg-violet-700"
+                >
+                  Switch to {LANGUAGES[detectedLanguage].name}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setDetectedLanguage(null)}
+                >
+                  Dismiss
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Editor Panel */}
       <div className="xl:col-span-2 space-y-4">
         {/* Editor Header */}
@@ -1030,16 +1188,16 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                 )}
               </div>
               
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2 flex-wrap">
                 {/* AI Actions Group */}
-                <div className="flex items-center gap-1 border-r pr-2 mr-2 border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-1 border-r px-2 border-gray-200 dark:border-gray-700">
                   <div className="relative group">
                     <Button 
                       variant="ghost" 
                       size="icon" 
                       onClick={explainWithAI}
                       disabled={isAiLoading}
-                      className="hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                      className="hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors h-9 w-9"
                     >
                       <SparklesIcon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                     </Button>
@@ -1054,7 +1212,7 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                       size="icon" 
                       onClick={optimizeCode}
                       disabled={isAiLoading}
-                      className="hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+                      className="hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors h-9 w-9"
                     >
                       <WrenchScrewdriverIcon className="w-4 h-4 text-green-600 dark:text-green-400" />
                     </Button>
@@ -1069,7 +1227,7 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                       size="icon" 
                       onClick={enhanceCodeWithComparison}
                       disabled={isAiLoading}
-                      className="hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                      className="hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors h-9 w-9"
                     >
                       <CodeBracketIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </Button>
@@ -1084,7 +1242,7 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                       size="icon" 
                       onClick={generateComments}
                       disabled={isAiLoading}
-                      className="hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+                      className="hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors h-9 w-9"
                     >
                       <ChatBubbleBottomCenterTextIcon className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                     </Button>
@@ -1099,7 +1257,7 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                       size="icon" 
                       onClick={debugCode}
                       disabled={isAiLoading}
-                      className="hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                      className="hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors h-9 w-9"
                     >
                       <BugAntIcon className="w-4 h-4 text-red-600 dark:text-red-400" />
                     </Button>
@@ -1114,7 +1272,7 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                       size="icon" 
                       onClick={reviewCode}
                       disabled={isAiLoading}
-                      className="hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
+                      className="hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors h-9 w-9"
                     >
                       <DocumentMagnifyingGlassIcon className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                     </Button>
@@ -1125,22 +1283,24 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                 </div>
                 
                 {/* Utility Actions Group */}
-                <div className="relative group">
-                  <Button variant="ghost" size="icon" onClick={shareCode}>
-                    <ShareIcon className="w-4 h-4" />
-                  </Button>
-                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
-                    Share Code
-                  </span>
-                </div>
-                
-                <div className="relative group">
-                  <Button variant="ghost" size="icon" onClick={downloadCodeFile}>
-                    <DocumentArrowDownIcon className="w-4 h-4" />
-                  </Button>
-                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
-                    Download Code
-                  </span>
+                <div className="flex items-center gap-1 border-l px-2 border-gray-200 dark:border-gray-700">
+                  <div className="relative group">
+                    <Button variant="ghost" size="icon" onClick={shareCode} className="h-9 w-9">
+                      <ShareIcon className="w-4 h-4" />
+                    </Button>
+                    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
+                      Share Code
+                    </span>
+                  </div>
+                  
+                  <div className="relative group">
+                    <Button variant="ghost" size="icon" onClick={downloadCodeFile} className="h-9 w-9">
+                      <DocumentArrowDownIcon className="w-4 h-4" />
+                    </Button>
+                    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
+                      Download Code
+                    </span>
+                  </div>
                 </div>
 
                 {/* Editor Settings */}
@@ -1227,6 +1387,24 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                                   <div className={`w-4 h-4 rounded-full bg-white shadow transform transition-transform ${wordWrap === 'on' ? 'translate-x-5' : 'translate-x-0.5'}`} />
                                 </button>
                               </label>
+                              
+                              <label className="flex items-center justify-between cursor-pointer">
+                                <span className="text-sm flex items-center gap-1">
+                                  Auto-detect Language
+                                  <SparklesIcon className="w-3 h-3 text-violet-500" />
+                                </span>
+                                <button
+                                  onClick={() => {
+                                    const newValue = !autoDetectEnabled
+                                    setAutoDetectEnabled(newValue)
+                                    localStorage.setItem('autoDetectEnabled', String(newValue))
+                                    toast.success(newValue ? 'Auto-detection enabled' : 'Auto-detection disabled')
+                                  }}
+                                  className={`w-10 h-5 rounded-full transition-colors ${autoDetectEnabled ? 'bg-violet-500' : 'bg-muted'}`}
+                                >
+                                  <div className={`w-4 h-4 rounded-full bg-white shadow transform transition-transform ${autoDetectEnabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                                </button>
+                              </label>
                             </div>
                             
                             {/* Format Button */}
@@ -1245,12 +1423,12 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                   </AnimatePresence>
                 </div>
                 
+                {/* Run Code Button - Primary Action (Right Side) */}
                 <div className="relative group">
                   <RunCodeButton 
                     onClick={runCode}
                     disabled={isRunning}
                     isRunning={isRunning}
-                    className="ml-2"
                   />
                   <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
                     Execute Code (Ctrl+Enter)
@@ -1289,18 +1467,33 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                   horizontalScrollbarSize: 10,
                 },
                 padding: { top: 16, bottom: 16 },
-                // Intellisense & Suggestions
+                
+                // Enhanced IntelliSense & Inline Suggestions (VS Code-like)
+                quickSuggestions: {
+                  other: 'on',
+                  comments: 'on',
+                  strings: 'on'
+                },
+                parameterHints: {
+                  enabled: true,
+                  cycle: true
+                },
                 suggestOnTriggerCharacters: true,
+                acceptSuggestionOnCommitCharacter: true,
                 acceptSuggestionOnEnter: 'on',
                 tabCompletion: 'on',
                 wordBasedSuggestions: 'allDocuments',
-                quickSuggestions: {
-                  other: true,
-                  comments: true,
-                  strings: true
-                },
                 suggestSelection: 'first',
                 snippetSuggestions: 'top',
+                
+                // Inline Suggestions (like GitHub Copilot)
+                inlineSuggest: {
+                  enabled: true,
+                  showToolbar: 'onHover',
+                  suppressSuggestions: false
+                },
+                
+                // Enhanced suggestion settings
                 suggest: {
                   showKeywords: true,
                   showSnippets: true,
@@ -1316,10 +1509,6 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                   showIssues: true,
                   showUsers: false,
                   showWords: true,
-                  insertMode: 'replace',
-                  filterGraceful: true,
-                  localityBonus: true,
-                  shareSuggestSelections: true,
                   showMethods: true,
                   showModules: true,
                   showProperties: true,
@@ -1330,12 +1519,29 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                   showEnumMembers: true,
                   showInterfaces: true,
                   showStructs: true,
+                  insertMode: 'replace',
+                  filterGraceful: true,
+                  localityBonus: true,
+                  shareSuggestSelections: true,
+                  snippetsPreventQuickSuggestions: false,
+                  preview: true,
+                  previewMode: 'prefix',
+                  showInlineDetails: true,
                 },
+                
+                // Hover tooltips
+                hover: {
+                  enabled: true,
+                  delay: 300,
+                  sticky: true
+                },
+                
                 // Code folding
                 folding: true,
                 foldingStrategy: 'indentation',
                 showFoldingControls: 'always',
                 unfoldOnClickAfterEndOfLine: false,
+                
                 // Bracket matching
                 bracketPairColorization: { enabled: true },
                 matchBrackets: 'always',
@@ -1343,22 +1549,18 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
                 autoClosingQuotes: 'always',
                 autoClosingOvertype: 'always',
                 autoSurround: 'languageDefined',
-                // Error markers
+                
+                // Inline error/warning markers (VS Code-like)
                 renderValidationDecorations: 'on',
+                renderLineHighlight: 'all',
+                renderLineHighlightOnlyWhenFocus: false,
+                
+                // Error lens features
+                glyphMargin: true,
+                
                 // Formatting
                 formatOnPaste: true,
                 formatOnType: true,
-                // Parameter hints
-                parameterHints: {
-                  enabled: true,
-                  cycle: true
-                },
-                // Hover info
-                hover: {
-                  enabled: true,
-                  delay: 300,
-                  sticky: true
-                },
                 // Code lens
                 codeLens: true,
                 // Inlay hints
@@ -1409,6 +1611,11 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
 
       {/* Output Panel */}
       <div className="space-y-4">
+        {/* Live Preview for web languages (HTML, CSS, React, Vue, SVG) */}
+        {LANGUAGES[language].hasLivePreview && (
+          <LivePreview code={code} language={language} />
+        )}
+        
         <Card className="flex-1">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -1533,6 +1740,32 @@ export default function Editor({ language, onLanguageChange }: EditorProps) {
           setCode(newCode);
           setShowComparison(false);
         }}
+      />
+      
+      {/* Command Palette */}
+      <CommandPalette
+        isOpen={showCommandPalette}
+        onClose={() => setShowCommandPalette(false)}
+        onRunCode={runCode}
+        onExplainCode={explainWithAI}
+        onOptimizeCode={optimizeCode}
+        onFormatCode={() => {
+          if (editorRef.current) {
+            editorRef.current.getAction('editor.action.formatDocument')?.run()
+            toast.success('Code formatted!')
+          }
+        }}
+        onDownloadCode={downloadCodeFile}
+        onShareCode={() => {
+          const url = generateShareableUrl(code, language)
+          copyToClipboard(url)
+          toast.success('Shareable link copied!')
+        }}
+        onChangeLanguage={onLanguageChange}
+        availableLanguages={Object.entries(LANGUAGES).map(([key, lang]) => ({
+          key: key as LanguageKey,
+          name: lang.name
+        }))}
       />
     </motion.div>
   )

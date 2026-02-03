@@ -235,4 +235,47 @@ html, body, #__next { height: 100%; }
   transition: none !important;
 }
 
+/* Animated Ripple Gradient Effect */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Smooth Flowing Wave Gradient */
+@keyframes flowing-wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 3s ease infinite;
+}
+
+.animate-flowing-wave {
+  animation: flowing-wave 5s linear infinite;
+}
+
+.animation-delay-150 {
+  animation-delay: 0.15s;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
 /* Editor theme hook: monaco can be toggled to match theme if desired. */
