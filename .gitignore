@@ -165,13 +165,27 @@ temp/
 # =========================================
 # Documentation & Scripts (exclude from commits)
 # =========================================
-# All .md files except README.md
-*.md
-!README.md
-!**/README.md
+# Exclude extra documentation files
+ADSENSE_POLICY_COMPLIANCE.md
+ADVANCED_EDITOR_FEATURES.md
+COMPLETION_SUMMARY.md
+DEPENDENCY_DETECTION.md
+DEV_SETUP.md
+ENHANCED_FEATURES_GUIDE.md
+FEATURE_ENHANCEMENT_SUMMARY.md
+IMPLEMENTATION_CHECKLIST.md
+KEYBOARD_SHORTCUTS.md
+PRODUCTION_CHECKLIST.md
+QUICK_INTEGRATION_GUIDE.md
+README_ULTIMATE.md
+infra/K8S_HARDENING.md
 
-# All .txt files
-*.txt
+# Exclude requirement/dependency txt files (not essential)
+services/ai-service/requirements.txt
+services/badge-service/requirements.txt
+
+# Exclude robots.txt
+web/public/robots.txt
 
 # Startup scripts (keep .js files)
 *.bat
