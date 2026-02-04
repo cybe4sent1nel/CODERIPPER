@@ -29,6 +29,7 @@ export default function Document() {
         <meta name="description" content="CodeRipper - Enterprise AI-Powered Code Editor & Compiler with multi-language support" />
         <meta name="keywords" content="code editor, AI, compiler, programming, development, IDE" />
         <meta name="author" content="CodeRipper Team" />
+        <meta name="google-adsense-account" content="ca-pub-2332002596329232" />
         
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
